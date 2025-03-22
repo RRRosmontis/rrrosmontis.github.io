@@ -11,7 +11,6 @@
             box-sizing: border-box;
         }
 
-        /* 背景设置 */
         body {
             padding-top: 80px;
             min-height: 100vh;
@@ -19,13 +18,13 @@
                         url('/background.jpg') center/cover fixed;
         }
 
-        /* 顶部导航栏 */
+        /* 顶部导航栏修正 */
         .topbar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 60px;
+            height: 70px;  /* 增加导航栏高度 */
             background: #ffffff;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -35,7 +34,22 @@
             z-index: 1000;
         }
 
-        /* 动态内容容器 (新增毛玻璃效果) */
+        /* 修正品牌文字大小 */
+        .brand-text {
+            font-size: 1.8em;  /* 原1.5em调整为1.8em */
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+        }
+
+        /* 修正右侧Logo尺寸 */
+        .right-logo {
+            height: 45px;      /* 原40px调整为45px */
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        /* 动态内容容器 */
         #dynamic-content {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
@@ -48,8 +62,28 @@
             min-height: 200px;
         }
 
-        /* 以下原有其他样式保持不变... */
-        /* (brand-text, right-logo, line-number, content-text等样式) */
+        /* 移动端适配修正 */
+        @media (max-width: 768px) {
+            .topbar {
+                height: 60px;  /* 原50px调整为60px */
+                padding: 0 20px;
+            }
+            
+            .brand-text {
+                font-size: 1.4em;  /* 原1.2em调整为1.4em */
+            }
+
+            .right-logo {
+                height: 35px;  /* 原30px调整为35px */
+            }
+
+            #dynamic-content {
+                margin-top: 80px;
+                padding: 25px;
+            }
+        }
+
+        /* 其他样式保持不变... */
     </style>
 </head>
 <body>
@@ -67,6 +101,69 @@
         <div id="content-text"></div>
     </div>
 
-    <!-- 原有脚本保持不变 -->
+    <script>
+        let isTyping = false;
+        let lines = [];
+        let lastIndex = -1;
+
+        // 获取文本内容
+        fetch('/dict.txt')
+            .then(response => response.text())
+            .then(data => {
+                lines = data.split('\n').filter(line => line.trim() !== '');
+                startPresentation();
+            })
+            .catch(error => console.error('文件加载失败:', error));
+
+        // 带防重复的随机选择
+        function getRandomLine() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * lines.length);
+            } while (newIndex === lastIndex && lines.length > 1);
+            lastIndex = newIndex;
+            return newIndex;
+        }
+
+        function startPresentation() {
+            if (isTyping) return;
+
+            const lineNumber = document.getElementById('line-number');
+            const contentText = document.getElementById('content-text');
+            
+            // 获取新内容
+            const randomIndex = getRandomLine();
+            const currentLine = lines[randomIndex];
+            
+            // 更新行号
+            lineNumber.textContent = `第 ${randomIndex + 1} 行`;
+            lineNumber.style.opacity = 0;
+            contentText.innerHTML = '';
+            isTyping = true;
+
+            // 行号淡入动画
+            setTimeout(() => {
+                lineNumber.style.opacity = 1;
+                
+                // 开始打字效果
+                let charIndex = 0;
+                function typeCharacter() {
+                    if (charIndex < currentLine.length) {
+                        contentText.innerHTML = currentLine.substring(0, charIndex) + 
+                                            `<span class="typing-cursor">|</span>`;
+                        charIndex++;
+                        setTimeout(typeCharacter, 50);
+                    } else {
+                        contentText.textContent = currentLine;
+                        setTimeout(() => {
+                            isTyping = false;
+                            startPresentation();
+                        }, 3000);
+                    }
+                }
+                typeCharacter();
+            }, 500);
+        }
+    </script>
 </body>
 </html>
