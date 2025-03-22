@@ -5,9 +5,7 @@
 
     <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
 
-    <a href="http://nothing.rrrosmontis.icu" class="logo-link">
-        <img src="/logo.png" class="right-logo">
-    </a>
+
     
     <style>
         /* 基础样式重置 */
@@ -34,16 +32,6 @@
             z-index: 1000;
         }
 
-        /* 右侧logo定位修正 */
-        .right-logo-container {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            position: absolute;  /* 绝对定位 */
-            right: 5%;          /* 与顶栏padding保持一致 */
-            top: 50%;           /* 垂直居中 */
-            transform: translateY(-50%);
-        }
 
         .right-logo {
             height: 35px;
@@ -100,6 +88,7 @@
             .right-logo {
                 height: 30px;
                 max-width: 120px; /* 防止溢出 */
+            }
             body {
                 padding-top: 70px;
             }
@@ -108,6 +97,10 @@
 </head>
 <body>
 
+    <a href="http://nothing.rrrosmontis.icu" class="logo-link">
+        <img src="/logo.png" class="right-logo">
+    </a>
+    
     <!-- 固定顶部导航栏 -->
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
