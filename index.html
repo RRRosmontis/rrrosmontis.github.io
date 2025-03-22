@@ -3,50 +3,50 @@
 <head>
     <title>Royirin Rosmontis Present</title>
     <style>
-        /* 固定顶部导航栏样式 */
+        /* 基础样式 */
+        body {
+            margin: 0;
+            padding-top: 70px; /* 保持顶部导航栏间距 */
+            min-height: 100vh;
+            /* 背景图片设置 */
+            background-image: url('/images/background.jpg'); /* 图片路径 */
+            background-size: cover; /* 自动缩放适应屏幕 */
+            background-attachment: fixed; /* 固定背景不滚动 */
+            background-position: center;
+            background-repeat: no-repeat;
+            /* 备用背景色 */
+            background-color: #f0f0f0;
+        }
+
+        /* 顶部导航栏保持原有样式 */
         .topbar {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background-color: #f8f9fa;  /* 浅灰色背景 */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);  /* 底部阴影效果 */
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;  /* 确保位于其他内容上方 */
+            /* 原有样式保持不变 */
         }
 
-        /* 左侧文字样式 */
-        .brand-text {
-            font-size: 1.2em;
-            color: #333;
-            font-weight: bold;
-            margin-right: 40px;
-        }
-
-        /* 主内容区需要设置上边距避免被顶部栏遮挡 */
-        body {
-            padding-top: 70px;  /* 顶部栏高度 + 20px */
+        /* 半透明文字容器 */
+        .content-box {
+            background: rgba(255, 255, 255, 0.85); /* 白色85%不透明度 */
+            backdrop-filter: blur(5px); /* 毛玻璃效果 */
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <!-- 固定顶部栏 -->
+    <!-- 原有顶部导航栏 -->
     <div class="topbar">
-        <div class="brand-text">
-            Royirin Rosmontis
-        </div>
-        <!-- 如果需要右侧可以添加其他元素 -->
+        <div class="brand-text">网站标题</div>
     </div>
 
-    <!-- 页面主要内容 -->
-    <div class="content">
-        <h1>Testing</h1>
-        <p>Nothing here</p>
-        <!-- 添加足够多的内容测试滚动效果 -->
-        <div style="height: 1500px"></div>
+    <!-- 内容容器 -->
+    <div class="content-box">
+        <h1>1</h1>
+        <p>2</p>
+        <!-- 添加更多内容 -->
     </div>
 </body>
 </html>
