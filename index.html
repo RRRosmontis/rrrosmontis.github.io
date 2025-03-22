@@ -2,11 +2,7 @@
 <html>
 <head>
     <title>Royirin Rosmontis Present</title>
-
     <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
-
-
-    
     <style>
         /* 基础样式重置 */
         * {
@@ -15,7 +11,6 @@
             box-sizing: border-box;
         }
 
-        
         /* 顶部导航栏 */
         .topbar {
             position: fixed;
@@ -27,18 +22,11 @@
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            justify-content: space-between; /* 关键布局属性 */
+            justify-content: space-between;
             padding: 0 5%;
             z-index: 1000;
         }
 
-
-        .right-logo {
-            height: 35px;
-            width: auto;
-            transition: transform 0.3s ease;
-        }
-        
         .brand-text {
             font-size: 1.5em;
             color: #2c3e50;
@@ -46,13 +34,18 @@
             letter-spacing: 1px;
         }
 
+        .right-logo {
+            height: 35px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
         /* 背景设置 */
         body {
-            padding-top: 80px; /* 顶栏高度 + 20px */
+            padding-top: 80px;
             min-height: 100vh;
             background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
                         url('/background.jpg') center/cover fixed;
-            
         }
 
         /* 内容容器 */
@@ -66,12 +59,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
-            <div class="right-logo-container">
-            <img src="logo.png" 
-                 class="right-logo" 
-                 alt="网站Logo"
-                 loading="eager">
-        
         /* 移动端适配 */
         @media (max-width: 768px) {
             .topbar {
@@ -81,13 +68,8 @@
             .brand-text {
                 font-size: 1.2em;
             }
-            .content-box {
-                margin: 20px 15px;
-                padding: 25px;
-            }
             .right-logo {
                 height: 30px;
-                max-width: 120px; /* 防止溢出 */
             }
             body {
                 padding-top: 70px;
@@ -96,18 +78,16 @@
     </style>
 </head>
 <body>
-
-    <a href="http://nothing.rrrosmontis.icu" class="logo-link">
-        <img src="/logo.png" class="right-logo">
-    </a>
-    
     <!-- 固定顶部导航栏 -->
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
+        <a href="http://nothing.rrrosmontis.icu">
+            <img src="logo.png" class="right-logo" alt="网站Logo">
+        </a>
     </div>
 
     <!-- 内容区域 -->
-    <div class="content-box">
+ <div class="content-box">
         <h1>以下内容为测试用的网页填充</h1>
         <p>简介
 乐队名Roselia取自蔷薇的rose和茶花的camellia。乐队logo的原型是蓝色蔷薇[1]，花语为“完成不可能之事”（不可能を成し遂げる）[2] [3]。
@@ -217,5 +197,6 @@ Roselia乐队现成员
 本文引自萌娘百科(https://mzh.moegirl.org.cn )，文字内容默认使用《知识共享 署名-非商业性使用-相同方式共享 3.0 中国大陆》协议。</p>
 
     </div>
+
 </body>
 </html>
