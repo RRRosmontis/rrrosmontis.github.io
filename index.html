@@ -1,12 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- 这里设置标题 -->
     <title>Royirin Rosmontis Present</title>
+    <style>
+        /* 固定顶部导航栏样式 */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #f8f9fa;  /* 浅灰色背景 */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);  /* 底部阴影效果 */
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;  /* 确保位于其他内容上方 */
+        }
+
+        /* 左侧文字样式 */
+        .brand-text {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+            margin-right: 40px;
+        }
+
+        /* 主内容区需要设置上边距避免被顶部栏遮挡 */
+        body {
+            padding-top: 70px;  /* 顶部栏高度 + 20px */
+        }
+    </style>
 </head>
 <body>
-    <!-- 网页内容 -->
-    <h1>RRRosmontis is testing this page！</h1>
-    <p>nothing here...</p>
+    <!-- 固定顶部栏 -->
+    <div class="topbar">
+        <div class="brand-text">
+            Royirin Rosmontis
+        </div>
+        <!-- 如果需要右侧可以添加其他元素 -->
+    </div>
+
+    <!-- 页面主要内容 -->
+    <div class="content">
+        <h1>Testing</h1>
+        <p>Nothing here</p>
+        <!-- 添加足够多的内容测试滚动效果 -->
+        <div style="height: 1500px"></div>
+    </div>
 </body>
 </html>
