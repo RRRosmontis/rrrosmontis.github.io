@@ -33,14 +33,24 @@
             padding: 0 5%;
             z-index: 1000;
             font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* 新增关键属性 */
+            padding: 0 5%; /* 确保左右留白 */
         }
 
 
-        .logo-link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-    }
+        .right-logo {
+            height: 40px;
+            width: auto;
+            /* 移除margin-left: auto */
+            /* 新增定位保障 */
+            position: relative;
+            right: 0;
+            /* 可视性保障 */
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
         
         .brand-text {
             font-size: 1.5em;
@@ -81,13 +91,23 @@
                 margin: 20px 15px;
                 padding: 25px;
             }
+            .right-logo {
+                height: 30px;
+                max-width: 120px; /* 防止溢出 */
             body {
                 padding-top: 70px;
             }
         }
     </style>
 </head>
-<body>
+<body
+
+    <!-- 修正后的右侧Logo（添加alt属性） -->
+    <img src="images/right-logo.png" 
+         class="right-logo" 
+         alt="右侧Logo"
+         loading="eager"> <!-- 优先加载 -->
+
     <!-- 固定顶部导航栏 -->
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
