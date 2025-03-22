@@ -3,50 +3,86 @@
 <head>
     <title>Royirin Rosmontis Present</title>
     <style>
-        /* 基础样式 */
-        body {
+        /* 基础样式重置 */
+        * {
             margin: 0;
-            padding-top: 70px; /* 保持顶部导航栏间距 */
-            min-height: 100vh;
-            /* 背景图片设置 */
-            background-image: url('/background.jpg'); /* 图片路径 */
-            background-size: cover; /* 自动缩放适应屏幕 */
-            background-attachment: fixed; /* 固定背景不滚动 */
-            background-position: center;
-            background-repeat: no-repeat;
-            /* 备用背景色 */
-            background-color: #f0f0f0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* 顶部导航栏保持原有样式 */
+        /* 顶部导航栏 */
         .topbar {
             position: fixed;
-            /* 原有样式保持不变 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.95); /* 半透明白色 */
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            z-index: 1000;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        /* 半透明文字容器 */
+        .brand-text {
+            font-size: 1.5em;
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* 背景设置 */
+        body {
+            padding-top: 80px; /* 顶栏高度 + 20px */
+            min-height: 100vh;
+            background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+                        url('/background.jpg') center/cover fixed;
+        }
+
+        /* 内容容器 */
         .content-box {
-            background: rgba(255, 255, 255, 0.85); /* 白色85%不透明度 */
-            backdrop-filter: blur(5px); /* 毛玻璃效果 */
-            border-radius: 15px;
-            padding: 30px;
-            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px auto;
             max-width: 800px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .topbar {
+                height: 50px;
+                padding: 0 20px;
+            }
+            .brand-text {
+                font-size: 1.2em;
+            }
+            .content-box {
+                margin: 20px 15px;
+                padding: 25px;
+            }
+            body {
+                padding-top: 70px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 原有顶部导航栏 -->
+    <!-- 固定顶部导航栏 -->
     <div class="topbar">
-        <div class="brand-text">网站标题</div>
+        <div class="brand-text">Royirin Rosmontis</div>
     </div>
 
-    <!-- 内容容器 -->
+    <!-- 内容区域 -->
     <div class="content-box">
-        <h1>1</h1>
-        <p>2</p>
-        <!-- 添加更多内容 -->
+        <h1>2</h1>
+        <p>1</p>
+        <!-- 更多内容 -->
     </div>
 </body>
 </html>
