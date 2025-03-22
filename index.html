@@ -62,22 +62,21 @@
 
         /* 标题样式 */
         #line-number {
-            font-size: 2.5em;  /* 放大标题 */
+            font-size: 2.5em;
             margin-bottom: 0.5em;
             color: #2c3e50;
-            font-weight: bold;  /* 加粗 */
+            font-weight: bold;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
 
         /* 正文样式 */
         #content-text {
-            font-size: 1.8em;  /* 放大正文 */
+            font-size: 1.8em;
             color: #666;
             min-height: 1.5em;
             letter-spacing: 1px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            opacity: 1; /* 保持可见状态 */
         }
 
         .typing-cursor {
@@ -114,11 +113,11 @@
             }
 
             #line-number {
-                font-size: 2em;  /* 移动端标题大小 */
+                font-size: 2em;
             }
 
             #content-text {
-                font-size: 1.5em;  /* 移动端正文大小 */
+                font-size: 1.5em;
             }
         }
     </style>
@@ -168,7 +167,7 @@
             const lineNumber = document.getElementById('line-number');
             const contentText = document.getElementById('content-text');
             
-            // 淡出效果
+            // 淡出当前内容
             lineNumber.style.opacity = 0;
             contentText.style.opacity = 0;
 
@@ -178,7 +177,7 @@
                 const currentLine = lines[randomIndex];
                 
                 // 更新内容
-                lineNumber.textContent = `Line ${randomIndex + 1}`;  // 改为英文格式
+                lineNumber.textContent = `Line ${randomIndex + 1}`;
                 contentText.innerHTML = '';
                 isTyping = true;
 
@@ -191,12 +190,11 @@
                     if (charIndex < currentLine.length) {
                         contentText.innerHTML = currentLine.substring(0, charIndex) + 
                                             `<span class="typing-cursor">|</span>`;
+                        contentText.style.opacity = 1; // 保持可见
                         charIndex++;
                         setTimeout(typeCharacter, 50);
                     } else {
                         contentText.textContent = currentLine;
-                        // 淡入正文
-                        contentText.style.opacity = 1;
                         setTimeout(() => {
                             isTyping = false;
                             startPresentation();
@@ -204,7 +202,7 @@
                     }
                 }
                 typeCharacter();
-            }, 500); // 淡出动画时间
+            }, 500);
         }
     </script>
 </body>
