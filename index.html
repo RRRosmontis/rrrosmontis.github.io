@@ -12,6 +12,10 @@
 
         /* 顶部导航栏 */
         .topbar {
+            <div class="topbar">
+                <!-- 新增的logo -->
+                <img src="logo.png" class="site-logo" alt="网站Logo">
+            </div>
             position: fixed;
             top: 0;
             left: 0;
@@ -27,11 +31,19 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+        .site-logo {
+            height: 40px;  /* 根据实际图片比例调整 */
+            width: auto;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        
         .brand-text {
             font-size: 1.5em;
             color: #2c3e50;
             font-weight: 600;
             letter-spacing: 1px;
+            margin-right: 0;
         }
 
         /* 背景设置 */
