@@ -18,13 +18,13 @@
                         url('/background.jpg') center/cover fixed;
         }
 
-        /* 顶部导航栏修正 */
+        /* 顶部导航栏 */
         .topbar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 70px;  /* 增加导航栏高度 */
+            height: 70px;
             background: #ffffff;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -34,17 +34,15 @@
             z-index: 1000;
         }
 
-        /* 修正品牌文字大小 */
         .brand-text {
-            font-size: 1.8em;  /* 原1.5em调整为1.8em */
+            font-size: 1.8em;
             color: #2c3e50;
             font-weight: 600;
             letter-spacing: 1.5px;
         }
 
-        /* 修正右侧Logo尺寸 */
         .right-logo {
-            height: 45px;      /* 原40px调整为45px */
+            height: 45px;
             width: auto;
             transition: transform 0.3s ease;
         }
@@ -62,28 +60,67 @@
             min-height: 200px;
         }
 
-        /* 移动端适配修正 */
+        /* 标题样式 */
+        #line-number {
+            font-size: 2.5em;  /* 放大标题 */
+            margin-bottom: 0.5em;
+            color: #2c3e50;
+            font-weight: bold;  /* 加粗 */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 正文样式 */
+        #content-text {
+            font-size: 1.8em;  /* 放大正文 */
+            color: #666;
+            min-height: 1.5em;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            background: #666;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 移动端适配 */
         @media (max-width: 768px) {
             .topbar {
-                height: 60px;  /* 原50px调整为60px */
+                height: 60px;
                 padding: 0 20px;
             }
             
             .brand-text {
-                font-size: 1.4em;  /* 原1.2em调整为1.4em */
+                font-size: 1.4em;
             }
 
             .right-logo {
-                height: 35px;  /* 原30px调整为35px */
+                height: 35px;
             }
 
             #dynamic-content {
                 margin-top: 80px;
                 padding: 25px;
             }
-        }
 
-        /* 其他样式保持不变... */
+            #line-number {
+                font-size: 2em;  /* 移动端标题大小 */
+            }
+
+            #content-text {
+                font-size: 1.5em;  /* 移动端正文大小 */
+            }
+        }
     </style>
 </head>
 <body>
@@ -131,18 +168,21 @@
             const lineNumber = document.getElementById('line-number');
             const contentText = document.getElementById('content-text');
             
-            // 获取新内容
-            const randomIndex = getRandomLine();
-            const currentLine = lines[randomIndex];
-            
-            // 更新行号
-            lineNumber.textContent = `第 ${randomIndex + 1} 行`;
+            // 淡出效果
             lineNumber.style.opacity = 0;
-            contentText.innerHTML = '';
-            isTyping = true;
+            contentText.style.opacity = 0;
 
-            // 行号淡入动画
             setTimeout(() => {
+                // 获取新内容
+                const randomIndex = getRandomLine();
+                const currentLine = lines[randomIndex];
+                
+                // 更新内容
+                lineNumber.textContent = `Line ${randomIndex + 1}`;  // 改为英文格式
+                contentText.innerHTML = '';
+                isTyping = true;
+
+                // 淡入标题
                 lineNumber.style.opacity = 1;
                 
                 // 开始打字效果
@@ -155,6 +195,8 @@
                         setTimeout(typeCharacter, 50);
                     } else {
                         contentText.textContent = currentLine;
+                        // 淡入正文
+                        contentText.style.opacity = 1;
                         setTimeout(() => {
                             isTyping = false;
                             startPresentation();
@@ -162,7 +204,7 @@
                     }
                 }
                 typeCharacter();
-            }, 500);
+            }, 500); // 淡出动画时间
         }
     </script>
 </body>
