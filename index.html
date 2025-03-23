@@ -127,6 +127,26 @@
             animation: blink 1s infinite;
         }
 
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            padding: 12px 0;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+    
+        /* 修正动态内容区底部间距 */
+        #dynamic-content {
+            margin-bottom: 60px; /* 添加此行 */
+        }
+        
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -168,10 +188,19 @@
                 padding: 10px 15px;
                 font-size: 0.9em;
             }
+            .footer {
+                font-size: 0.8em;
+                padding: 10px 0;
+            }
         }
+
     </style>
 </head>
 <body>
+    <div class="footer">
+        <p>© 2024 Royirin Rosmontis. All rights reserved.</p>
+    </div>
+    
     <!-- 固定顶部导航栏 -->
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
