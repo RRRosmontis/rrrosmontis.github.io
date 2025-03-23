@@ -41,10 +41,50 @@
             letter-spacing: 1.5px;
         }
 
+        /* 右侧logo和下拉菜单 */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+        }
+
         .right-logo {
             height: 45px;
             width: auto;
             transition: transform 0.3s ease;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(-10px);
+        }
+
+        .logo-container:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 1em;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(44, 62, 80, 0.05);
         }
 
         /* 动态内容容器 */
@@ -76,7 +116,7 @@
             color: #666;
             min-height: 1.5em;
             letter-spacing: 1px;
-            opacity: 1; /* 保持可见状态 */
+            opacity: 1;
         }
 
         .typing-cursor {
@@ -119,6 +159,15 @@
             #content-text {
                 font-size: 1.5em;
             }
+
+            .dropdown-menu {
+                min-width: 160px;
+            }
+
+            .dropdown-menu a {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
@@ -126,9 +175,17 @@
     <!-- 固定顶部导航栏 -->
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
-        <a href="http://nothing.rrrosmontis.icu">
-            <img src="logo.png" class="right-logo" alt="网站Logo">
-        </a>
+        <div class="logo-container">
+            <a href="http://nothing.rrrosmontis.icu">
+                <img src="logo.png" class="right-logo" alt="网站Logo">
+            </a>
+            <!-- 下拉菜单 -->
+            <div class="dropdown-menu">
+                <a href="https://example.com/link1" target="_blank">项目一</a>
+                <a href="https://example.com/link2" target="_blank">项目二</a>
+                <a href="https://example.com/link3" target="_blank">项目三</a>
+            </div>
+        </div>
     </div>
 
     <!-- 动态内容区域 -->
@@ -190,7 +247,7 @@
                     if (charIndex < currentLine.length) {
                         contentText.innerHTML = currentLine.substring(0, charIndex) + 
                                             `<span class="typing-cursor">|</span>`;
-                        contentText.style.opacity = 1; // 保持可见
+                        contentText.style.opacity = 1;
                         charIndex++;
                         setTimeout(typeCharacter, 50);
                     } else {
