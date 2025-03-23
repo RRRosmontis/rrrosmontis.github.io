@@ -47,11 +47,21 @@
             display: inline-block;
         }
 
+        /* 新增旋转动画 */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .right-logo {
             height: 45px;
             width: auto;
             transition: transform 0.3s ease;
             cursor: pointer;
+        }
+
+        .right-logo:hover {
+            animation: spin 0.5s linear;
         }
 
         .dropdown-menu {
@@ -253,6 +263,7 @@
         // 下拉菜单交互逻辑
         const logoContainer = document.querySelector('.logo-container');
         const dropdownMenu = document.querySelector('.dropdown-menu');
+        const contentText = document.getElementById('content-text');
 
         // 点击logo切换菜单
         logoContainer.addEventListener('click', function(e) {
@@ -299,7 +310,6 @@
             if (isTyping) return;
 
             const lineNumber = document.getElementById('line-number');
-            const contentText = document.getElementById('content-text');
             
             lineNumber.style.opacity = 0;
             contentText.style.opacity = 0;
@@ -323,15 +333,27 @@
                         charIndex++;
                         setTimeout(typeCharacter, 50);
                     } else {
-                        contentText.textContent = currentLine;
+                        contentText.innerHTML = currentLine;
                         setTimeout(() => {
-                            isTyping = false;
-                            startPresentation();
-                        }, 3000);
+                            deleteCharacter(currentLine, currentLine.length);
+                        }, 1000);
                     }
                 }
                 typeCharacter();
             }, 500);
+        }
+
+        // 新增删除函数
+        function deleteCharacter(line, remaining) {
+            if (remaining > 0) {
+                const newText = line.substring(0, remaining - 1);
+                contentText.innerHTML = newText + `<span class="typing-cursor">|</span>`;
+                setTimeout(() => deleteCharacter(line, remaining - 1), 1000 / line.length);
+            } else {
+                contentText.innerHTML = '';
+                isTyping = false;
+                startPresentation();
+            }
         }
     </script>
 </body>
