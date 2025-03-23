@@ -333,6 +333,11 @@
                         setTimeout(typeCharacter, 50);
                     } else {
                         contentText.innerHTML = currentLine;
+                         // 等待3秒后开始删除动画
+                        setTimeout(() => {
+                            lineNumber.style.opacity = 0;
+                            deleteCharacter(currentLine, currentLine.length);
+                        }, 3000);
                         // 同时触发标题淡出和正文删除
                         lineNumber.style.opacity = 0;
                         deleteCharacter(currentLine, currentLine.length);
@@ -347,7 +352,7 @@
             if (remaining > 0) {
                 const newText = line.substring(0, remaining - 1);
                 contentText.innerHTML = newText + `<span class="typing-cursor">|</span>`;
-                setTimeout(() => deleteCharacter(line, remaining - 1), 500 / line.length);
+                setTimeout(() => deleteCharacter(line, remaining - 1), 1000 / line.length);
             } else {
                 contentText.innerHTML = '';
                 isTyping = false;
