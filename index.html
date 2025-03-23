@@ -352,7 +352,7 @@
             if (remaining > 0) {
                 const newText = line.substring(0, remaining - 1);
                 contentText.innerHTML = newText + `<span class="typing-cursor">|</span>`;
-                setTimeout(() => deleteCharacter(line, remaining - 1), 1000 / line.length);
+                setTimeout(() => deleteCharacter(line, remaining - 1), 500 / line.length);
             } else {
                 contentText.innerHTML = '';
                 isTyping = false;
