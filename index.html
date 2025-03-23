@@ -47,7 +47,7 @@
             display: inline-block;
         }
 
-        /* 新增旋转动画 */
+        /* 旋转动画 */
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -264,6 +264,7 @@
         const logoContainer = document.querySelector('.logo-container');
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const contentText = document.getElementById('content-text');
+        const lineNumber = document.getElementById('line-number');
 
         // 点击logo切换菜单
         logoContainer.addEventListener('click', function(e) {
@@ -309,8 +310,6 @@
         function startPresentation() {
             if (isTyping) return;
 
-            const lineNumber = document.getElementById('line-number');
-            
             lineNumber.style.opacity = 0;
             contentText.style.opacity = 0;
 
@@ -334,21 +333,21 @@
                         setTimeout(typeCharacter, 50);
                     } else {
                         contentText.innerHTML = currentLine;
-                        setTimeout(() => {
-                            deleteCharacter(currentLine, currentLine.length);
-                        }, 1000);
+                        // 同时触发标题淡出和正文删除
+                        lineNumber.style.opacity = 0;
+                        deleteCharacter(currentLine, currentLine.length);
                     }
                 }
                 typeCharacter();
             }, 500);
         }
 
-        // 新增删除函数
+        // 删除函数（时长缩短一倍）
         function deleteCharacter(line, remaining) {
             if (remaining > 0) {
                 const newText = line.substring(0, remaining - 1);
                 contentText.innerHTML = newText + `<span class="typing-cursor">|</span>`;
-                setTimeout(() => deleteCharacter(line, remaining - 1), 1000 / line.length);
+                setTimeout(() => deleteCharacter(line, remaining - 1), 500 / line.length);
             } else {
                 contentText.innerHTML = '';
                 isTyping = false;
