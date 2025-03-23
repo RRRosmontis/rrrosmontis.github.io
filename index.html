@@ -4,6 +4,7 @@
     <title>Royirin Rosmontis Present</title>
     <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
     <style>
+        /* 基础样式重置 */
         * {
             margin: 0;
             padding: 0;
@@ -17,17 +18,7 @@
                         url('/background.jpg') center/cover fixed;
         }
 
-
-        .additional-box {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 30px auto;
-            max-width: 800px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            min-height: 200px;
+        /* 顶部导航栏 */
         .topbar {
             position: fixed;
             top: 0;
@@ -50,6 +41,7 @@
             letter-spacing: 1.5px;
         }
 
+        /* 右侧logo和下拉菜单 */
         .logo-container {
             position: relative;
             display: inline-block;
@@ -104,18 +96,33 @@
             background: rgba(44, 62, 80, 0.05);
         }
 
+        /* 动态内容容器 */
         #dynamic-content {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
             border-radius: 20px;
             padding: 40px;
-            margin: 30px auto 60px;
+            margin: 30px auto;
             max-width: 800px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
             min-height: 200px;
         }
 
+        /* 新增空白文本框 */
+        .additional-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 0 auto 60px;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 200px;
+        }
+
+        /* 标题样式 */
         #line-number {
             font-size: 2.5em;
             margin-bottom: 0.5em;
@@ -125,7 +132,7 @@
             transition: opacity 0.5s ease;
         }
 
-
+        /* 正文样式 */
         #content-text {
             font-size: 1.8em;
             color: #666;
@@ -161,7 +168,7 @@
             50% { opacity: 0; }
         }
 
-
+        /* 移动端适配 */
         @media (max-width: 768px) {
             .topbar {
                 height: 60px;
@@ -179,6 +186,12 @@
             #dynamic-content {
                 margin-top: 80px;
                 padding: 25px;
+            }
+
+            .additional-box {
+                padding: 25px;
+                margin: 0 auto 30px;
+                min-height: 150px;
             }
 
             #line-number {
@@ -201,30 +214,22 @@
                 font-size: 0.8em;
                 padding: 12px 0;
             }
-            .additional-box {
-                padding: 25px;
-                margin: 20px auto;
-                min-height: 150px;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="additional-box">
-        <p style="color: #999; font-style: italic;">（此处为预留内容区域）</p>
-    </div>
     <div class="footer">
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
     </div>
     
-
+    <!-- 固定顶部导航栏 -->
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
         <div class="logo-container">
             <a href="http://nothing.rrrosmontis.icu">
                 <img src="logo.png" class="right-logo" alt="网站Logo">
             </a>
-
+            <!-- 下拉菜单 -->
             <div class="dropdown-menu">
                 <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
                 <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
@@ -232,37 +237,43 @@
         </div>
     </div>
 
-
+    <!-- 动态内容区域 -->
     <div id="dynamic-content">
         <div id="line-number"></div>
         <div id="content-text"></div>
     </div>
 
-    <script>
+    <!-- 新增空白文本框 -->
+    <div class="additional-box">
+        <!-- 在此处添加自定义内容 -->
+        <p style="color: #999; font-style: italic;">（预留内容区域）</p>
+    </div>
 
+    <script>
+        // 下拉菜单交互逻辑
         const logoContainer = document.querySelector('.logo-container');
         const dropdownMenu = document.querySelector('.dropdown-menu');
 
-
+        // 点击logo切换菜单
         logoContainer.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             dropdownMenu.classList.toggle('active');
         });
 
-
+        // 点击页面其他区域关闭菜单
         document.addEventListener('click', function(e) {
             if (!logoContainer.contains(e.target)) {
                 dropdownMenu.classList.remove('active');
             }
         });
 
-
+        // 点击菜单项时不关闭菜单
         dropdownMenu.addEventListener('click', function(e) {
             e.stopPropagation();
         });
 
-
+        // 动态内容展示逻辑
         let isTyping = false;
         let lines = [];
         let lastIndex = -1;
