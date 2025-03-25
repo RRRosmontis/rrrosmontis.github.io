@@ -178,13 +178,14 @@
               margin: 0 auto; 
             }
 
-          .custom-hr {
-            border: none;
-            height: 1px;
-            background-color: #ccc;
-            width: 10px
-            margin: 20px auto;
-          }
+    .custom-hr {
+        border: none;
+        height: 1px;
+        background-color: #ccc;
+        width: 90%; /* 设置为90%宽度 */
+        margin: 20px auto; /* 居中 */
+        opacity: 0.6; /* 添加透明度使更柔和 */
+    }
 
         .toc-container {
         position: fixed;
@@ -198,7 +199,6 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         z-index: 998;
         transition: transform 0.3s ease;
-        display: none; /* 默认隐藏 */
     }
 
     .toc-container:hover {
