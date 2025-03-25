@@ -315,6 +315,54 @@
                 margin: 20px auto; /* 居中 */
                 opacity: 0.6; /* 添加透明度使更柔和 */
             }
+            .toc-container {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 60px; /* 位于footer上方 */
+            top: auto; /* 取消顶部定位 */
+            transform: none; /* 取消垂直居中 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+            padding: 15px 10px;
+            width: auto;
+            margin: 0 20px;
+        }
+
+        .toc-title {
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .toc-list {
+            display: flex;
+            gap: 15px;
+            padding: 0 10px;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .toc-list li {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .toc-list a {
+            padding: 8px 12px;
+            background: rgba(44, 62, 80, 0.1);
+            border-radius: 20px;
+        }
+
+        .toc-list a:hover {
+            background: rgba(44, 62, 80, 0.2);
+            padding-left: 12px; /* 取消悬停时的左侧padding变化 */
+        }
+
+        .toc-list a::before {
+            display: none; /* 移除圆点标记 */
+        }
 
         html {
         scroll-behavior: smooth;
