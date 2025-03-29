@@ -585,24 +585,13 @@
         let lines = [];
         let lastIndex = -1;
 
-        fetch('/dict.txt?t=' + Date.now())
-    .then(response => {
-        if (!response.ok) throw new Error(`HTTP状态码: ${response.status}`);
-        return response.text();
-    })
-            
-    .then(data => {
-        lines = data.split('\n').filter(line => line.trim() !== '');
-        if (lines.length === 0) throw new Error("文件内容为空");
-        console.log("成功加载行数:", lines.length); // 调试输出
-        startPresentation();
-    })
-            
-    .catch(error => {
-        console.error('错误详情:', error);
-        contentText.textContent = "加载失败: " + error.message;
-        lineNumber.textContent = "错误";
-    });
+        fetch('/dict.txt')
+            .then(response => response.text())
+            .then(data => {
+                lines = data.split('\n').filter(line => line.trim() !== '');
+                startPresentation();
+            })
+            .catch(error => console.error('文件加载失败:', error));
 
         function getRandomLine() {
             let newIndex;
@@ -612,7 +601,7 @@
             lastIndex = newIndex;
             return newIndex;
         }
-            
+
         function startPresentation() {
             if (isTyping) return;
 
