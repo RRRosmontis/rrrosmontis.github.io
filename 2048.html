@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-      // 自动将路径从 /2048.html 重定向到 /2048
   if (window.location.pathname === '/2048.html') {
     window.history.replaceState({}, '', '/2048');
   }
-  // 如果用户直接访问 /2048，自动补全路径到 /2048.html
   if (window.location.pathname === '/2048/') {
     window.location.href = '/2048.html';
   }
@@ -214,12 +212,6 @@
                 <a href="#">Menu Item 3 →</a>
             </div>
         </div>
-    </div>
-
-    <div class="content-container">
-        <h1>Welcome to New Page</h1>
-        <p>This is a sample content area with the same visual style.</p>
-        <!-- 可以添加更多内容 -->
     </div>
 
     <div class="footer">
