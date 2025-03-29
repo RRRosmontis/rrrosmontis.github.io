@@ -484,7 +484,7 @@
     </style>
 </head>
 <body>
-        <script>
+<script>
     document.querySelectorAll('.toc-list a').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -495,7 +495,7 @@
             });
         });
     });
-    </script>
+</script>
 
 <div class="topbar">
     <div class="brand-text">Royirin Rosmontis</div>
@@ -524,7 +524,6 @@
 </div>
 </div>
 
-    
     <div class="toc-container">
     <div class="toc-title">目录</div>
     <ul class="toc-list">
@@ -533,7 +532,6 @@
     </ul>
     </div>
 
-    
     
     <div class="footer">
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
@@ -577,23 +575,23 @@
         let lines = [];
         let lastIndex = -1;
 
-        fetch('/dict.txt')
-            .then(response => response.text())
-            .then(data => {
-                lines = data.split('\n').filter(line => line.trim() !== '');
-                startPresentation();
-            })
-            .catch(error => console.error('文件加载失败:', error));
-
-        function getRandomLine() {
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * lines.length);
-            } while (newIndex === lastIndex && lines.length > 1);
-            lastIndex = newIndex;
-            return newIndex;
-        }
-
+        fetch('/dict.txt?t=' + Date.now())
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP状态码: ${response.status}`);
+        return response.text();
+    })
+    .then(data => {
+        lines = data.split('\n').filter(line => line.trim() !== '');
+        if (lines.length === 0) throw new Error("文件内容为空");
+        console.log("成功加载行数:", lines.length); // 调试输出
+        startPresentation();
+    })
+    .catch(error => {
+        console.error('错误详情:', error);
+        contentText.textContent = "加载失败: " + error.message;
+        lineNumber.textContent = "错误";
+    });
+        
         function startPresentation() {
             if (isTyping) return;
 
@@ -647,10 +645,9 @@
     <div id="dynamic-content">
         <div id="line-number"></div>
         <div id="content-text"></div>
-    </div><br>
+    </div>
 
     <hr class="custom-hr"><br>
-
 
     
     <div class="additional-box" id="post1">
