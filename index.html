@@ -512,6 +512,8 @@
         </a>
         <div class="dropdown-menu">
             <!-- 保持原有下拉菜单 -->
+            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
         </div>
     </div>
 
@@ -543,6 +545,17 @@
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const contentText = document.getElementById('content-text');
         const lineNumber = document.getElementById('line-number');
+        const hamburger = document.querySelector('.hamburger');
+        const topbarNav = document.querySelector('.topbar-nav');
+
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            topbarNav.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            topbarNav.classList.remove('active');
+        });
 
         document.querySelector('.right-logo').addEventListener('click', function(e) {
         e.preventDefault();
@@ -630,19 +643,15 @@
         }
     </script>
     
-    const hamburger = document.querySelector('.hamburger');
-const topbarNav = document.querySelector('.topbar-nav');
-
-hamburger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    topbarNav.classList.toggle('active');
-});
-
-document.addEventListener('click', function(e) {
-    topbarNav.classList.remove('active');
-});
+    <!-- 动态内容区域 -->
+    <div id="dynamic-content">
+        <div id="line-number"></div>
+        <div id="content-text"></div>
+    </div><br>
 
     <hr class="custom-hr"><br>
+
+
     
     <div class="additional-box" id="post1">
         <div class="title-container">
