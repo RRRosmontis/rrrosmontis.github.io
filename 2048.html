@@ -250,8 +250,8 @@
 }
 
         /* 移动端方向按钮 */
-         .mobile-controls {
-    display: none;
+      .mobile-controls {
+    display: none; /* 默认隐藏 */
     position: fixed;
     bottom: 120px;
     left: 50%;
@@ -305,10 +305,11 @@
         }
 
          .mobile-controls {
-        display: flex;
+        display: flex; /* 仅在移动端显示 */
     }
     #game-container {
-        top: 40%; /* 调整游戏容器位置 */
+        top: 45% !important; /* 确保游戏容器不会遮挡按钮 */
+        max-height: 400px; /* 减少容器高度 */
     }
 
     }
@@ -383,6 +384,13 @@
     dropdownMenu.addEventListener('click', function(e) {
         e.stopPropagation();
     });
+
+    document.querySelectorAll('.nav-item').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.stopPropagation(); // 阻止事件冒泡
+        dropdownMenu.classList.remove('active'); // 关闭可能打开的下拉菜单
+    });
+});
 </script>
 
         <div id="game-container">
