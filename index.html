@@ -518,18 +518,18 @@
     </div>
 
     <div class="hamburger">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-</div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
 </div>
 
     <div class="toc-container">
-    <div class="toc-title">目录</div>
-    <ul class="toc-list">
-        <li><a href="#post1">没用的文字</a></li>
-        <li><a href="#post2">对Lonelydcb的抨击</a></li>
-    </ul>
+        <div class="toc-title">目录</div>
+        <ul class="toc-list">
+            <li><a href="#post1">没用的文字</a></li>
+            <li><a href="#post2">对Lonelydcb的抨击</a></li>
+        </ul>
     </div>
 
     
@@ -580,28 +580,38 @@
         console.error("错误：无法找到动态文本框元素！");
         return;
     }
+            
         let isTyping = false;
         let lines = [];
         let lastIndex = -1;
 
-        
         fetch('/dict.txt?t=' + Date.now())
     .then(response => {
         if (!response.ok) throw new Error(`HTTP状态码: ${response.status}`);
         return response.text();
     })
+            
     .then(data => {
         lines = data.split('\n').filter(line => line.trim() !== '');
         if (lines.length === 0) throw new Error("文件内容为空");
         console.log("成功加载行数:", lines.length); // 调试输出
         startPresentation();
     })
+            
     .catch(error => {
         console.error('错误详情:', error);
         contentText.textContent = "加载失败: " + error.message;
         lineNumber.textContent = "错误";
     });
-        
+
+        function getRandomLine() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * lines.length);
+            } while (newIndex === lastIndex && lines.length > 1);
+            lastIndex = newIndex;
+            return newIndex;
+            
         function startPresentation() {
             if (isTyping) return;
 
