@@ -171,27 +171,14 @@
         }
 
         #game-board {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 20px auto;
-        }
-
-        .game-cell {
-            width: 80px;
-            height: 80px;
-            background-color: rgba(238, 228, 218, 0.35);
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #776e65;
-        }
+        grid-template-columns: repeat(4, 1fr) !important;
+        pointer-events: none; /* 防止空单元格无法触发事件 */
+    }
+    
+    .game-cell {
+        pointer-events: auto; /* 恢复事件响应 */
+        background-color: rgba(238, 228, 218, 0.35) !important; /* 强制显示空单元格 */
+    }
 
         .number-2 { background-color: #e6f0ff; }
         .number-4 { background-color: #b3d4ff; }
@@ -446,11 +433,21 @@
         }
 
         function updateBoard() {
-            const gameBoard = document.getElementById('game-board');
-            const existingCells = new Map([...gameBoard.children].map(cell => {
-                const [x, y] = cell.dataset.position.split('-').map(Number);
-                return [`${x}-${y}`, cell];
-            }));
+        const gameBoard = document.getElementById('game-board');
+        gameBoard.innerHTML = ''; // 清空棋盘重新渲染
+        
+        // 始终创建4x4的单元格
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                const value = board[i][j];
+                const cell = document.createElement('div');
+                cell.className = `game-cell${value ? ' number-' + value : ''}`;
+                cell.dataset.position = `${i}-${j}`;
+                cell.textContent = value || '';
+                gameBoard.appendChild(cell);
+            }
+        }
+    }
 
             // 更新/创建单元格
             for (let i = 0; i < boardSize; i++) {
@@ -480,29 +477,29 @@
         }
 
         function animateMovement(oldBoard) {
-            document.querySelectorAll('.game-cell').forEach(cell => {
-                const [x, y] = cell.dataset.position.split('-').map(Number);
-                const value = board[x][y];
-                let oldX = x, oldY = y;
-
-                // 查找旧位置
-                for (let i = 0; i < boardSize; i++) {
-                    for (let j = 0; j < boardSize; j++) {
-                        if (oldBoard[i][j] === value && board[x][y] !== oldBoard[x][y]) {
-                            oldX = i;
-                            oldY = j;
-                        }
+        document.querySelectorAll('.game-cell').forEach(cell => {
+            const [x, y] = cell.dataset.position.split('-').map(Number);
+            const value = board[x][y];
+            
+            // 查找旧位置（优化后的查找逻辑）
+            let oldX = x, oldY = y;
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    if (oldBoard[i][j] === value && (i !== x || j !== y)) {
+                        oldX = i;
+                        oldY = j;
                     }
                 }
+            }
 
-                const dx = (y - oldY) * 90;
-                const dy = (x - oldX) * 90;
-                if (dx !== 0 || dy !== 0) {
-                    cell.style.transform = `translate(${dx}px, ${dy}px)`;
-                    cell.style.transition = 'transform 0.15s ease';
-                }
-            });
-        }
+            const dx = (y - oldY) * (cell.offsetWidth + 10); // 动态计算间距
+            const dy = (x - oldX) * (cell.offsetHeight + 10);
+            if (dx !== 0 || dy !== 0) {
+                cell.style.transform = `translate(${dx}px, ${dy}px)`;
+                setTimeout(() => cell.style.transform = '', 150);
+            }
+        });
+    }
 
         function move(direction) {
         const oldBoard = JSON.parse(JSON.stringify(board));
