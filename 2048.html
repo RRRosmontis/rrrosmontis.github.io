@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2048 Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #faf8ef;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            background-color: #bbada0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(238, 228, 218, 0.35);
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #776e65;
+        }
+
+        .number {
+            background-color: #eee4da;
+        }
+
+        .number-2 { background-color: #eee4da; }
+        .number-4 { background-color: #ede0c8; }
+        .number-8 { background-color: #f2b179; color: #f9f6f2; }
+        .number-16 { background-color: #f59563; color: #f9f6f2; }
+        .number-32 { background-color: #f67c5f; color: #f9f6f2; }
+        .number-64 { background-color: #f65e3b; color: #f9f6f2; }
+        .number-128 { background-color: #edcf72; color: #f9f6f2; }
+        .number-256 { background-color: #edcc61; color: #f9f6f2; }
+        .number-512 { background-color: #edc850; color: #f9f6f2; }
+        .number-1024 { background-color: #edc53f; color: #f9f6f2; }
+        .number-2048 { background-color: #edc22e; color: #f9f6f2; }
+
+        #score {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>2048</h1>
+    <div id="score">Score: 0</div>
+    <div id="game-board"></div>
+    <script>
+        let board = [];
+        let score = 0;
+        const boardSize = 4;
+
+        function initGame() {
+            // 初始化棋盘
+            board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+            score = 0;
+            updateScore();
+            addNewNumber();
+            addNewNumber();
+            updateBoard();
+        }
+
+        function addNewNumber() {
+            const emptyCells = [];
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    if (board[i][j] === 0) {
+                        emptyCells.push({x: i, y: j});
+                    }
+                }
+            }
+            if (emptyCells.length > 0) {
+                const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                board[randomCell.x][randomCell.y] = Math.random() < 0.9 ? 2 : 4;
+            }
+        }
+
+        function updateBoard() {
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.innerHTML = '';
+            
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (board[i][j] !== 0) {
+                        cell.classList.add('number', `number-${board[i][j]}`);
+                        cell.textContent = board[i][j];
+                    }
+                    gameBoard.appendChild(cell);
+                }
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Score: ${score}`;
+        }
+
+        function move(direction) {
+            let moved = false;
+            const originalBoard = JSON.stringify(board);
+
+            switch(direction) {
+                case 'ArrowUp':
+                    moved = moveUp();
+                    break;
+                case 'ArrowDown':
+                    moved = moveDown();
+                    break;
+                case 'ArrowLeft':
+                    moved = moveLeft();
+                    break;
+                case 'ArrowRight':
+                    moved = moveRight();
+                    break;
+            }
+
+            if (moved) {
+                addNewNumber();
+                updateBoard();
+                updateScore();
+                checkGameOver();
+            }
+        }
+
+        function moveRow(row) {
+            let newRow = row.filter(cell => cell !== 0);
+            for (let i = newRow.length - 1; i > 0; i--) {
+                if (newRow[i] === newRow[i - 1]) {
+                    newRow[i] *= 2;
+                    score += newRow[i];
+                    newRow.splice(i - 1, 1);
+                    i--;
+                }
+            }
+            while (newRow.length < boardSize) {
+                newRow.unshift(0);
+            }
+            return newRow;
+        }
+
+        function moveLeft() {
+            let moved = false;
+            for (let i = 0; i < boardSize; i++) {
+                const newRow = moveRow([...board[i]]);
+                if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
+                    board[i] = newRow;
+                    moved = true;
+                }
+            }
+            return moved;
+        }
+
+        function moveRight() {
+            let moved = false;
+            for (let i = 0; i < boardSize; i++) {
+                const newRow = moveRow([...board[i].reverse()]).reverse();
+                if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
+                    board[i] = newRow;
+                    moved = true;
+                }
+            }
+            return moved;
+        }
+
+        function moveUp() {
+            let moved = false;
+            for (let j = 0; j < boardSize; j++) {
+                const column = [];
+                for (let i = 0; i < boardSize; i++) {
+                    column.push(board[i][j]);
+                }
+                const newColumn = moveRow(column);
+                for (let i = 0; i < boardSize; i++) {
+                    if (board[i][j] !== newColumn[i]) {
+                        board[i][j] = newColumn[i];
+                        moved = true;
+                    }
+                }
+            }
+            return moved;
+        }
+
+        function moveDown() {
+            let moved = false;
+            for (let j = 0; j < boardSize; j++) {
+                const column = [];
+                for (let i = 0; i < boardSize; i++) {
+                    column.push(board[i][j]);
+                }
+                const newColumn = moveRow(column.reverse()).reverse();
+                for (let i = 0; i < boardSize; i++) {
+                    if (board[i][j] !== newColumn[i]) {
+                        board[i][j] = newColumn[i];
+                        moved = true;
+                    }
+                }
+            }
+            return moved;
+        }
+
+        function checkGameOver() {
+            // 检查是否有空格子
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    if (board[i][j] === 0) return false;
+                    if (i < boardSize - 1 && board[i][j] === board[i + 1][j]) return false;
+                    if (j < boardSize - 1 && board[i][j] === board[i][j + 1]) return false;
+                }
+            }
+            alert('Game Over!');
+            return true;
+        }
+
+        // 事件监听
+        document.addEventListener('keydown', (event) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.preventDefault();
+                move(event.key);
+            }
+        });
+
+        // 初始化游戏
+        initGame();
+    </script>
+</body>
+</html>
