@@ -118,6 +118,20 @@
         .dropdown-menu a:hover {
             background: rgba(44, 62, 80, 0.05);
         }
+
+        .hamburger {
+        display: none;
+        cursor: pointer;
+        padding: 10px;
+    }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #2c3e50;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
         
         .topbar-nav {
             display: flex;
@@ -423,12 +437,49 @@
             display: none; /* 移除圆点标记 */
         }
 
+          /* 新增以下样式 */
+        .topbar-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            flex-direction: column;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .topbar-nav.active {
+            display: flex;
+        }
+        
+        .nav-item {
+            padding: 10px 0;
+        }
+        
+        /* 移除原有.additional-box的margin-left */
+        .additional-box {
+            margin-left: auto;
+
+       .dropdown-menu {
+            width: 100%;
+            right: auto;
+            left: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .hamburger {
+        display: block;
+    }
+    
         .logo-container {
-                gap: 15px;
-            }
-            .topbar-nav {
-                gap: 10px;
-            }
+            margin-left: 0;
+        }
+        
+        .topbar-nav {
+            order: 1;
+        }
 }
     </style>
 </head>
@@ -463,6 +514,12 @@
             <!-- 保持原有下拉菜单 -->
         </div>
     </div>
+
+    <div class="hamburger">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+</div>
 </div>
 
     
@@ -487,11 +544,11 @@
         const contentText = document.getElementById('content-text');
         const lineNumber = document.getElementById('line-number');
 
-        logoContainer.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('active');
-        });
+        document.querySelector('.right-logo').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+    });
 
         document.addEventListener('click', function(e) {
             if (!logoContainer.contains(e.target)) {
@@ -572,6 +629,18 @@
             }
         }
     </script>
+    
+    const hamburger = document.querySelector('.hamburger');
+const topbarNav = document.querySelector('.topbar-nav');
+
+hamburger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    topbarNav.classList.toggle('active');
+});
+
+document.addEventListener('click', function(e) {
+    topbarNav.classList.remove('active');
+});
 
     <hr class="custom-hr"><br>
     
