@@ -505,36 +505,82 @@
         }
 
         function move(direction) {
-            const oldBoard = JSON.parse(JSON.stringify(board));
-            let moved = false;
+        const oldBoard = JSON.parse(JSON.stringify(board));
+        let moved = false;
 
-            switch(direction) {
-                case 'ArrowUp': moved = moveVertical(true); break;
-                case 'ArrowDown': moved = moveVertical(false); break;
-                case 'ArrowLeft': moved = moveHorizontal(true); break;
-                case 'ArrowRight': moved = moveHorizontal(false); break;
-            }
-
-            if (moved) {
-                addNewNumber();
-                animateMovement(oldBoard);
-                setTimeout(() => {
-                    updateBoard();
-                    updateScore();
-                    checkGameOver();
-                }, 150);
-            }
+        switch(direction) {
+            case 'ArrowUp': moved = moveVertical(true); break;
+            case 'ArrowDown': moved = moveVertical(false); break;
+            case 'ArrowLeft': moved = moveHorizontal(true); break;
+            case 'ArrowRight': moved = moveHorizontal(false); break;
         }
 
+        if (moved) {
+            addNewNumber();
+            updateScore(); // 立即更新分数
+            animateMovement(oldBoard);
+            setTimeout(() => {
+                updateBoard();
+                checkGameOver();
+            }, 150);
+        }
+    }
+
         // 移动逻辑（保持原有实现）
-        function moveVertical(up) { /* 原有实现 */ }
-        function moveHorizontal(left) { /* 原有实现 */ }
-        function processLine(line, isForward) { /* 原有实现 */ }
+        function moveVertical(up) {
+            let moved = false;
+            for (let j = 0; j < boardSize; j++) {
+                let column = [];
+                for (let i = 0; i < boardSize; i++) column.push(board[i][j]);
+                if (!up) column = column.reverse();
+                const newColumn = processLine(column, true);
+                if (!up) newColumn.reverse();
+                for (let i = 0; i < boardSize; i++) {
+                    if (board[i][j] !== newColumn[i]) {
+                        board[i][j] = newColumn[i];
+                        moved = true;
+                    }
+                }
+            }
+            return moved;
+        }
+        
+        function moveHorizontal(left) {
+    let moved = false;
+    for (let i = 0; i < boardSize; i++) {
+        const row = left ? board[i] : [...board[i]].reverse();
+        const newRow = processLine(row, true);
+        if (!left) newRow.reverse();
+        if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
+            board[i] = newRow;
+            moved = true;
+        }
+    }
+    return moved;
+}
+        
+        function processLine(line, isForward) {
+        let arr = line.filter(x => x !== 0);
+        for (let i = 0; i < arr.length - 1; i++) {
+            if (arr[i] === arr[i + 1]) {
+                arr[i] *= 2;
+                score += arr[i]; // 直接修改全局score
+                arr.splice(i + 1, 1);
+                arr.push(0);
+            }
+        }
+        while (arr.length < boardSize) {
+            arr.push(0);
+        }
+        return arr;
+    }
+
 
         // 其他功能
         function updateScore() {
-            document.getElementById('game-score').textContent = `Score: ${score}`;
-        }
+        // 确保选择器与HTML结构一致
+        document.getElementById('game-score').textContent = `Score: ${score}`;
+    }
 
         function checkGameOver() { /* 原有实现 */ }
 
