@@ -618,18 +618,12 @@ function updateBoard() {
     const gameBoard = document.getElementById('game-board');
     const existingCells = new Map(
         Array.from(gameBoard.children).map(cell => {
-            const [x, y] = cell.dataset.position.split('-');
+            const [x, y] = cell.dataset.position.split('-').map(Number);
             return [`${x}-${y}`, cell];
         })
     );
 
-    // 重置所有单元格状态
-    existingCells.forEach(cell => {
-        cell.classList.remove('new-cell', 'merged');
-        cell.style.transform = '';
-    });
-
-    // 遍历新布局
+    // 遍历新布局并更新位置
     for (let i = 0; i < boardSize; i++) {
         for (let j = 0; j < boardSize; j++) {
             const value = board[i][j];
@@ -637,14 +631,8 @@ function updateBoard() {
             
             if (existingCells.has(cellKey)) {
                 const cell = existingCells.get(cellKey);
-                const prevValue = parseInt(cell.textContent || 0);
-                
-                // 更新位置和数值
+                // 更新数值和样式
                 if (cell.textContent != value) {
-                    if (value > prevValue && prevValue !== 0) {
-                        cell.classList.add('merged');
-                        score += value;
-                    }
                     cell.textContent = value || '';
                     cell.className = `game-cell${value ? ' number-' + value : ''}`;
                 }
@@ -661,38 +649,64 @@ function updateBoard() {
 
     // 移除多余单元格
     existingCells.forEach((cell, key) => {
-        if (![...Array(boardSize).keys()].some(i => 
-            [...Array(boardSize).keys()].some(j => 
-                `${i}-${j}` === key
-            )
-        )) {
+        if (!board.some((row, i) => row.some((_, j) => `${i}-${j}` === key))) {
             cell.remove();
         }
     });
-
-    // 触发重排以应用动画
-    void gameBoard.offsetWidth;
 }
 
-// 修改moveVertical和moveHorizontal函数，添加位置变换
-function moveVertical(up) {
+// 修改后的move函数
+function move(direction) {
     let moved = false;
-    // ...原有逻辑...
-    // 在移动后添加位置变换
-    requestAnimationFrame(() => {
-        document.querySelectorAll('.game-cell').forEach(cell => {
-            const [x, y] = cell.dataset.position.split('-').map(Number);
-            cell.style.transform = `translate(${y * 90}px, ${x * 90}px)`;
-        });
+    const originalBoard = JSON.stringify(board);
+
+    // 移动前记录旧位置
+    const oldPositions = new Map();
+    document.querySelectorAll('.game-cell').forEach(cell => {
+        oldPositions.set(cell, cell.dataset.position);
     });
-    return moved;
+
+    // 执行移动逻辑...
+    // (保持原有switch case逻辑不变)
+
+    if (moved) {
+        // 更新实际数据
+        addNewNumber();
+        updateScore();
+        checkGameOver();
+
+        // 触发动画
+        animateMovement(oldPositions);
+        setTimeout(() => updateBoard(), 150); // 等待动画完成后更新DOM
+    }
 }
 
-function moveHorizontal(left) {
-    let moved = false;
-    // ...原有逻辑...
-    // 同上添加位置变换
-    return moved;
+// 新增动画函数
+function animateMovement(oldPositions) {
+    const cells = document.querySelectorAll('.game-cell');
+    cells.forEach(cell => {
+        const [newX, newY] = cell.dataset.position.split('-').map(Number);
+        const oldPos = oldPositions.get(cell);
+        
+        if (oldPos) {
+            const [oldX, oldY] = oldPos.split('-').map(Number);
+            if (oldX !== newX || oldY !== newY) {
+                // 计算偏移量（需根据实际尺寸调整）
+                const dx = (newY - oldY) * 90; // 80px单元格+10px间隙
+                const dy = (newX - oldX) * 90;
+                cell.style.transform = `translate(${dx}px, ${dy}px)`;
+                cell.style.transition = 'transform 0.15s ease';
+            }
+        } else {
+            // 新单元格动画
+            cell.style.opacity = '0';
+            cell.style.transform = 'scale(0.5)';
+            cell.style.transition = 'all 0.15s ease';
+            void cell.offsetWidth; // 触发重绘
+            cell.style.opacity = '1';
+            cell.style.transform = 'scale(1)';
+        }
+    });
 }
 </script>
 </body>
