@@ -511,23 +511,32 @@
         }
 
        function move(direction) {
-            let moved = false;
-            const originalBoard = JSON.stringify(board);
+    let moved = false;
+    const originalBoard = JSON.stringify(board);
 
-            switch(direction) {
-                case 'ArrowUp': moved = moveVertical(true); break;
-                case 'ArrowDown': moved = moveVertical(false); break;
-                case 'ArrowLeft': moved = moveHorizontal(true); break;
-                case 'ArrowRight': moved = moveHorizontal(false); break;
-            }
+    // 执行移动逻辑前保存旧状态
+    const oldBoard = JSON.parse(JSON.stringify(board));
 
-            if (moved) {
-                addNewNumber();
-                updateBoard();
-                updateScore();
-                checkGameOver();
-            }
-        }
+    switch(direction) {
+        case 'ArrowUp': moved = moveVertical(true); break;
+        case 'ArrowDown': moved = moveVertical(false); break;
+        case 'ArrowLeft': moved = moveHorizontal(true); break;
+        case 'ArrowRight': moved = moveHorizontal(false); break;
+    }
+
+    if (moved) {
+        // 先更新数据再执行动画
+        addNewNumber();
+        updateScore();
+        checkGameOver();
+        
+        // 执行动画
+        animateMovement(oldBoard);
+        setTimeout(() => {
+            updateBoard(); // 动画完成后更新DOM
+        }, 150);
+    }
+}
 
 
         function moveVertical(up) {
@@ -613,99 +622,78 @@
     </script>
 
     <script>
-// 修改updateBoard函数
-function updateBoard() {
-    const gameBoard = document.getElementById('game-board');
-    const existingCells = new Map(
-        Array.from(gameBoard.children).map(cell => {
-            const [x, y] = cell.dataset.position.split('-').map(Number);
-            return [`${x}-${y}`, cell];
-        })
-    );
-
-    // 遍历新布局并更新位置
-    for (let i = 0; i < boardSize; i++) {
-        for (let j = 0; j < boardSize; j++) {
-            const value = board[i][j];
-            const cellKey = `${i}-${j}`;
-            
-            if (existingCells.has(cellKey)) {
-                const cell = existingCells.get(cellKey);
-                // 更新数值和样式
-                if (cell.textContent != value) {
-                    cell.textContent = value || '';
-                    cell.className = `game-cell${value ? ' number-' + value : ''}`;
-                }
-            } else {
-                // 创建新单元格
-                const cell = document.createElement('div');
-                cell.className = `game-cell${value ? ' number-' + value : ''} new-cell`;
-                cell.textContent = value || '';
-                cell.dataset.position = `${i}-${j}`;
-                gameBoard.appendChild(cell);
-            }
-        }
-    }
-
-    // 移除多余单元格
-    existingCells.forEach((cell, key) => {
-        if (!board.some((row, i) => row.some((_, j) => `${i}-${j}` === key))) {
-            cell.remove();
-        }
-    });
-}
-
-// 修改后的move函数
-function move(direction) {
-    let moved = false;
-    const originalBoard = JSON.stringify(board);
-
-    // 移动前记录旧位置
-    const oldPositions = new Map();
-    document.querySelectorAll('.game-cell').forEach(cell => {
-        oldPositions.set(cell, cell.dataset.position);
-    });
-
-    // 执行移动逻辑...
-    // (保持原有switch case逻辑不变)
-
-    if (moved) {
-        // 更新实际数据
-        addNewNumber();
-        updateScore();
-        checkGameOver();
-
-        // 触发动画
-        animateMovement(oldPositions);
-        setTimeout(() => updateBoard(), 150); // 等待动画完成后更新DOM
-    }
-}
-
-// 新增动画函数
-function animateMovement(oldPositions) {
+function animateMovement(oldBoard) {
     const cells = document.querySelectorAll('.game-cell');
     cells.forEach(cell => {
-        const [newX, newY] = cell.dataset.position.split('-').map(Number);
-        const oldPos = oldPositions.get(cell);
-        
-        if (oldPos) {
-            const [oldX, oldY] = oldPos.split('-').map(Number);
-            if (oldX !== newX || oldY !== newY) {
-                // 计算偏移量（需根据实际尺寸调整）
-                const dx = (newY - oldY) * 90; // 80px单元格+10px间隙
-                const dy = (newX - oldX) * 90;
-                cell.style.transform = `translate(${dx}px, ${dy}px)`;
-                cell.style.transition = 'transform 0.15s ease';
-            }
-        } else {
-            // 新单元格动画
-            cell.style.opacity = '0';
-            cell.style.transform = 'scale(0.5)';
-            cell.style.transition = 'all 0.15s ease';
-            void cell.offsetWidth; // 触发重绘
-            cell.style.opacity = '1';
-            cell.style.transform = 'scale(1)';
+        const [x, y] = cell.dataset.position.split('-').map(Number);
+        const oldValue = oldBoard[x][y];
+        const newValue = board[x][y];
+
+        // 合并动画
+        if (newValue > oldValue && oldValue !== 0) {
+            cell.classList.add('merged');
         }
+
+        // 位置动画
+        const oldIndex = findOldPosition(oldBoard, x, y, newValue);
+        if (oldIndex) {
+            const dx = (y - oldIndex.y) * 90;
+            const dy = (x - oldIndex.x) * 90;
+            cell.style.transform = `translate(${dx}px, ${dy}px)`;
+            cell.style.transition = 'transform 0.15s ease';
+        }
+    });
+}
+
+// 辅助函数：查找旧位置
+function findOldPosition(oldBoard, x, y, value) {
+    for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+            if (oldBoard[i][j] === value && board[x][y] === value) {
+                return {x: i, y: j};
+            }
+        }
+    }
+    return null;
+}
+
+// 修改后的updateBoard函数
+function updateBoard() {
+    const gameBoard = document.getElementById('game-board');
+    const existingCells = Array.from(gameBoard.children);
+    
+    // 保留现有DOM元素
+    const cellsMap = new Map();
+    existingCells.forEach(cell => {
+        const [x, y] = cell.dataset.position.split('-').map(Number);
+        cellsMap.set(`${x}-${y}`, cell);
+    });
+
+    // 更新单元格状态
+    for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+            const key = `${i}-${j}`;
+            const value = board[i][j];
+            
+            if (cellsMap.has(key)) {
+                const cell = cellsMap.get(key);
+                cell.textContent = value || '';
+                cell.className = `game-cell${value ? ' number-' + value : ''}`;
+                cell.style.transform = ''; // 重置动画
+            } else {
+                const newCell = document.createElement('div');
+                newCell.className = `game-cell${value ? ' number-' + value : ''} new-cell`;
+                newCell.textContent = value || '';
+                newCell.dataset.position = key;
+                gameBoard.appendChild(newCell);
+            }
+        }
+    }
+
+    // 移除多余元素
+    existingCells.forEach(cell => {
+        const [x, y] = cell.dataset.position.split('-').map(Number);
+        if (board[x][y] === 0) cell.remove();
     });
 }
 </script>
