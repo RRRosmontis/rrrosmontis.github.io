@@ -3,7 +3,15 @@
 <head>
     <title>Royirin Rosmontis Present - 2048</title>
     <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
+    <link rel="preload" href="/Kazesawa-Regular.ttf" as="font" type="font/ttf" crossorigin>
     <style>
+         @font-face {
+            font-family: 'Kazesawa-Regular';
+            src: url('/Kazesawa-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* 优化字体加载显示 */
+        }
         * {
             margin: 0;
             padding: 0;
@@ -18,8 +26,7 @@
             font-family: Arial, sans-serif;
         }
 
-        /* 统一顶栏样式 */
-        .topbar {
+         .topbar {
             position: fixed;
             top: 0;
             left: 0;
@@ -39,6 +46,10 @@
             color: #2c3e50;
             font-weight: 600;
             letter-spacing: 1.5px;
+            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; /* 添加字体声明 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         .logo-container {
