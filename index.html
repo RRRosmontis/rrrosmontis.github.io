@@ -39,6 +39,7 @@
             justify-content: space-between;
             padding: 0 5%;
             z-index: 1000;
+            justify-content: space-between;
         }
 
         .brand-text {
@@ -113,6 +114,44 @@
 
         .dropdown-menu a:hover {
             background: rgba(44, 62, 80, 0.05);
+        }
+        
+        .topbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 30px; /* 控制导航项间距 */
+            margin-right: 20px; /* 与logo的间距 */
+        }
+        
+        .nav-item {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                        Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: 1.1em;
+            color: #2c3e50;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.2s ease;
+            padding: 5px 0;
+        }
+        
+        .nav-item:hover {
+            color: #3498db; /* 悬停颜色 */
+        }
+        
+        /* 添加下划线动画效果 */
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3498db;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
         }
 
         #dynamic-content {
@@ -381,6 +420,20 @@
             display: none; /* 移除圆点标记 */
         }
             }
+
+        .topbar-nav {
+        gap: 15px;
+        margin-right: 10px;
+    }
+    .nav-item {
+        font-size: 0.95em;
+    }
+}
+        @media (max-width: 480px) {
+    .topbar-nav {
+        display: none; /* 小屏幕隐藏导航项 */
+    }
+}
     </style>
 </head>
 <body>
@@ -404,6 +457,12 @@
                 <img src="logo.png" class="right-logo" alt="网站Logo">
             </a>
 
+            <!-- 新增导航容器 -->
+        <nav class="topbar-nav">
+            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
+        </nav>
+            
             <div class="dropdown-menu">
                 <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
                 <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
