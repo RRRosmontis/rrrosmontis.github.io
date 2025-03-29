@@ -57,8 +57,8 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-left: auto; /* 关键属性：向右推挤 */
+            gap: 30px; /* 控制导航项与logo的间距 */
+            margin-left: auto; /* 将整个logo容器推到右侧 */
         }
 
         @keyframes spin {
@@ -121,9 +121,9 @@
         
         .topbar-nav {
             display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-right: auto; /* 关键属性：向左推挤元素 */
+            gap: 20px;
+            order: -1; /* 使导航项显示在logo左侧 */
+            margin-right: 0;
         }
         
         .nav-item {
@@ -422,18 +422,13 @@
         .toc-list a::before {
             display: none; /* 移除圆点标记 */
         }
-            }
 
-        .topbar {
-        gap: 10px;
-    }
-        .topbar-nav {
-            gap: 15px;
-        }
-        
-    .nav-item {
-        font-size: 0.95em;
-    }
+        .logo-container {
+                gap: 15px;
+            }
+            .topbar-nav {
+                gap: 10px;
+            }
 }
     </style>
 </head>
@@ -451,26 +446,24 @@
     });
     </script>
 
-    <div class="topbar">
+<div class="topbar">
     <div class="brand-text">Royirin Rosmontis</div>
     
-    <!-- 将导航栏移到logo容器外部 -->
-    <nav class="topbar-nav">
-        <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
-        <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
-    </nav>
-
     <div class="logo-container">
+        <!-- 新增导航容器在logo内部 -->
+        <nav class="topbar-nav">
+            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
+        </nav>
+        
         <a href="http://nothing.rrrosmontis.icu">
             <img src="logo.png" class="right-logo" alt="网站Logo">
         </a>
         <div class="dropdown-menu">
-            <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
-            <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
+            <!-- 保持原有下拉菜单 -->
         </div>
     </div>
 </div>
-
 
     
     <div class="toc-container">
