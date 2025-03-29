@@ -176,7 +176,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            background-color: #bbada0;
+            background-color: #f0f0f0;
             padding: 10px;
             border-radius: 5px;
             margin: 20px auto;
@@ -213,7 +213,7 @@
         #game-score {
             font-size: 24px;
             color: #2c3e50;
-            margin: 15px 0;
+            margin: 0 0 20px 0;
         }
 
         .hamburger {
@@ -250,13 +250,12 @@
 }
 
         /* 移动端方向按钮 */
-        .mobile-controls {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            gap: 10px;
+         .mobile-controls {
+            position: relative; /* 改为相对定位 */
+            bottom: auto;
+            left: auto;
+            transform: none;
+            margin-top: 20px; /* 增加上方间距 */
         }
 
         .control-row {
@@ -388,9 +387,10 @@
 </script>
 
         <div id="game-container">
+        <!-- 将提示文字移动到Score上方 -->
+        <p style="color:#666; margin:0 0 10px 0;">使用方向键移动方块</p>
         <div id="game-score">Score: 0</div>
         <div id="game-board"></div>
-        <p style="color:#666; margin-top:20px;">使用方向键移动方块</p>
         
         <!-- 新增移动端控制按钮 -->
  <div class="mobile-controls">
