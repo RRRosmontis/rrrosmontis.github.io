@@ -171,16 +171,6 @@
             font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        #game-container {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 30px auto;
-            max-width: 800px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
 
         #game-board {
             display: grid;
@@ -240,17 +230,24 @@
         transition: 0.4s;
     }
 
-        #game-container {
-            width: 90vmin;
-            height: 90vmin;
-            max-width: 500px;
-            max-height: 500px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 2vmin;
-        }
+       #game-container {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 30px auto;
+    max-width: 800px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90vmin;
+    height: 90vmin;
+    max-width: 500px;
+    max-height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
         /* 移动端方向按钮 */
         .mobile-controls {
@@ -411,8 +408,6 @@
     </div>
     
     <script>
-        const logoContainer = document.querySelector('.logo-container');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
 
         logoContainer.addEventListener('click', function(e) {
             e.preventDefault();
@@ -568,8 +563,9 @@
             }
         });
 
+        initGame();
 
-            // 添加移动端控制
+                    // 添加移动端控制
          document.querySelectorAll('.control-btn').forEach(btn => {
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -579,9 +575,6 @@
                 move(e.target.dataset.direction);
             });
         });
-
-
-                initGame();
 
     </script>
     
