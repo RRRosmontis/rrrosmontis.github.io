@@ -371,15 +371,7 @@
     </style>
 </head>
 <body>
-    <div class="toc-container">
-    <div class="toc-title">目录</div>
-    <ul class="toc-list">
-        <li><a href="#post1">没用的文字</a></li>
-        <li><a href="#post2">对Lonelydcb的抨击</a></li>
-    </ul>
-    </div>
-
-    <script>
+        <script>
     document.querySelectorAll('.toc-list a').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -391,11 +383,6 @@
         });
     });
     </script>
-    
-    <div class="footer">
-        <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
-    </div>
-    
 
     <div class="topbar">
         <div class="brand-text">Royirin Rosmontis</div>
@@ -411,11 +398,27 @@
         </div>
     </div>
 
-
-    <div id="dynamic-content">
+        <div id="dynamic-content">
         <div id="line-number"></div>
         <div id="content-text"></div>
     </div>
+
+
+    
+    <div class="toc-container">
+    <div class="toc-title">目录</div>
+    <ul class="toc-list">
+        <li><a href="#post1">没用的文字</a></li>
+        <li><a href="#post2">对Lonelydcb的抨击</a></li>
+    </ul>
+    </div>
+
+    
+    
+    <div class="footer">
+        <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
+    </div>
+    
 
     <script>
         const logoContainer = document.querySelector('.logo-container');
