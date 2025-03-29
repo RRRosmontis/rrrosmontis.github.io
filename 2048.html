@@ -347,13 +347,7 @@
         <div class="bar"></div>
     </div>
 </div>
-
-    <div id="game-container">
-        <div id="game-score">Score: 0</div>
-        <div id="game-board"></div>
-        <p style="color:#666; margin-top:20px;">使用方向键移动方块</p>
-    </div>
-
+    
     <div class="footer">
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
     </div>
@@ -402,7 +396,7 @@
         <p style="color:#666; margin-top:20px;">使用方向键移动方块</p>
         
         <!-- 新增移动端控制按钮 -->
-        <div class="mobile-controls">
+ <div class="mobile-controls">
             <div class="control-row">
                 <div class="control-btn" data-direction="ArrowUp">↑</div>
             </div>
@@ -444,7 +438,6 @@
             board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
             const gameBoard = document.getElementById('game-board');
             gameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
-            gameBoard.style.gap = '10px';
             score = 0;
             updateScore();
             addNewNumber();
@@ -488,19 +481,10 @@
         }
 
        function move(direction) {
-            // 调换上下左右方向处理
-            const directionMap = {
-                ArrowUp: 'ArrowLeft',
-                ArrowDown: 'ArrowRight',
-                ArrowLeft: 'ArrowUp',
-                ArrowRight: 'ArrowDown'
-            };
-            const actualDirection = directionMap[direction] || direction;
-            
             let moved = false;
             const originalBoard = JSON.stringify(board);
 
-            switch(actualDirection) {
+            switch(direction) {
                 case 'ArrowUp': moved = moveVertical(true); break;
                 case 'ArrowDown': moved = moveVertical(false); break;
                 case 'ArrowLeft': moved = moveHorizontal(true); break;
@@ -577,45 +561,24 @@
             return true;
         }
 
-        document.addEventListener('keydown', (e) => {
+         document.addEventListener('keydown', (e) => {
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
                 e.preventDefault();
-                if (!dropdownMenu.classList.contains('active')) {
-                    move(e.key);
-                }
+                move(e.key);
             }
         });
 
 
             // 添加移动端控制
-        document.querySelectorAll('.control-btn').forEach(btn => {
+         document.querySelectorAll('.control-btn').forEach(btn => {
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 move(e.target.dataset.direction);
             });
+            btn.addEventListener('click', (e) => { // 添加点击事件支持桌面调试
+                move(e.target.dataset.direction);
+            });
         });
-
-            
-            // 保留现有元素实现动画
-            for (let i = 0; i < boardSize; i++) {
-                for (let j = 0; j < boardSize; j++) {
-                    const index = i * boardSize + j;
-                    const value = board[i][j];
-                    
-                    if (cells[index]) {
-                        // 更新现有元素
-                        cells[index].className = `game-cell number-${value}`;
-                        cells[index].textContent = value || '';
-                    } else {
-                        // 创建新元素
-                        const cell = document.createElement('div');
-                        cell.className = `game-cell number-${value}`;
-                        cell.textContent = value || '';
-                        gameBoard.appendChild(cell);
-                    }
-                }
-            }
-        }
 
 
                 initGame();
