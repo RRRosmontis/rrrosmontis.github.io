@@ -216,59 +216,76 @@
             margin: 15px 0;
         }
 
-        @media (max-width: 768px) {
-            .topbar {
-                height: 60px;
-                padding: 0 20px;
-            }
-            .brand-text {
-                font-size: 1.4em;
-            }
-            .right-logo {
-                height: 35px;
-            }
-            #game-board {
-                gap: 5px;
-                padding: 5px;
-            }
-            .game-cell {
-                width: 60px;
-                height: 60px;
-                font-size: 20px;
-            }
-            #game-score {
-                font-size: 20px;
-            }
-            .footer {
-                font-size: 0.8em;
-                padding: 12px 0;
-            }
-            .logo-container {
-                gap: 15px;
-            }
-            .topbar-nav {
-                gap: 10px;
-            }
+        .hamburger {
+        display: none;
+        cursor: pointer;
+        padding: 10px;
+    }
+
+    .bar {
+        width: 25px;
+        height: 3px;
+        background-color: #2c3e50;
+        margin: 4px 0;
+        transition: 0.4s;
+    }
+
+
+         @media (max-width: 768px) {
+        .topbar-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            flex-direction: column;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
         }
+        
+        .topbar-nav.active {
+            display: flex;
+        }
+        
+        .hamburger {
+            display: block;
+        }
+        
+        .logo-container {
+            margin-left: 0;
+        }
+    }
     </style>
 </head>
 <body>
     <div class="topbar">
-        <div class="brand-text">Royirin Rosmontis</div>
-        <div class="logo-container">
-            <nav class="topbar-nav">
-                <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
-                <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
-            </nav>
-            <a href="http://nothing.rrrosmontis.icu">
-                <img src="logo.png" class="right-logo" alt="网站Logo">
-            </a>
-            <div class="dropdown-menu">
-                <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
-                <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
-            </div>
+    <div class="brand-text">Royirin Rosmontis</div>
+    
+    <div class="logo-container">
+        <!-- 导航容器 -->
+        <nav class="topbar-nav">
+            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
+        </nav>
+        
+        <!-- Logo 和下拉菜单 -->
+        <a href="http://nothing.rrrosmontis.icu">
+            <img src="logo.png" class="right-logo" alt="网站Logo">
+        </a>
+        <div class="dropdown-menu">
+            <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
+            <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
         </div>
     </div>
+
+    <!-- 汉堡菜单 -->
+    <div class="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</div>
 
     <div id="game-container">
         <div id="game-score">Score: 0</div>
@@ -280,6 +297,44 @@
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
     </div>
 
+    <script>
+    // 顶栏交互逻辑
+    const hamburger = document.querySelector('.hamburger');
+    const topbarNav = document.querySelector('.topbar-nav');
+    const logoContainer = document.querySelector('.logo-container');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    // 汉堡菜单点击事件
+    hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        topbarNav.classList.toggle('active');
+    });
+
+    // 关闭导航菜单
+    document.addEventListener('click', function(e) {
+        topbarNav.classList.remove('active');
+    });
+
+    // Logo 点击显示下拉菜单
+    document.querySelector('.right-logo').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+    });
+
+    // 点击页面其他区域关闭下拉菜单
+    document.addEventListener('click', function(e) {
+        if (!logoContainer.contains(e.target)) {
+            dropdownMenu.classList.remove('active');
+        }
+    });
+
+    // 阻止下拉菜单点击事件冒泡
+    dropdownMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+</script>
+    
     <script>
         const logoContainer = document.querySelector('.logo-container');
         const dropdownMenu = document.querySelector('.dropdown-menu');
