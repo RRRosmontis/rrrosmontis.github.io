@@ -537,11 +537,6 @@
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
     </div>
 
-        <!-- 动态内容区域 -->
-    <div id="dynamic-content">
-        <div id="line-number"></div>
-        <div id="content-text"></div>
-    </div>
 
     <script>
         const logoContainer = document.querySelector('.logo-container');
@@ -576,10 +571,20 @@
             e.stopPropagation();
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+    const contentText = document.getElementById('content-text');
+    const lineNumber = document.getElementById('line-number');
+    
+    // 检查元素是否存在
+    if (!contentText || !lineNumber) {
+        console.error("错误：无法找到动态文本框元素！");
+        return;
+    }
         let isTyping = false;
         let lines = [];
         let lastIndex = -1;
 
+        
         fetch('/dict.txt?t=' + Date.now())
     .then(response => {
         if (!response.ok) throw new Error(`HTTP状态码: ${response.status}`);
@@ -646,6 +651,12 @@
         }
     </script>
 
+    <!-- 动态内容区域 -->
+    <div id="dynamic-content">
+        <div id="line-number"></div>
+        <div id="content-text"></div>
+    </div>
+    
     <hr class="custom-hr"><br>
 
     
