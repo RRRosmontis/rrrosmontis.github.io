@@ -40,6 +40,7 @@
             padding: 0 5%;
             z-index: 1000;
             justify-content: space-between;
+            gap: 20px;
         }
 
         .brand-text {
@@ -54,8 +55,10 @@
         }
 
         .logo-container {
-            position: relative;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto; /* 关键属性：向右推挤 */
         }
 
         @keyframes spin {
@@ -119,8 +122,8 @@
         .topbar-nav {
             display: flex;
             align-items: center;
-            gap: 30px; /* 控制导航项间距 */
-            margin-right: 20px; /* 与logo的间距 */
+            gap: 30px;
+            margin-right: auto; /* 关键属性：向左推挤元素 */
         }
         
         .nav-item {
@@ -421,17 +424,15 @@
         }
             }
 
-        .topbar-nav {
-        gap: 15px;
-        margin-right: 10px;
+        .topbar {
+        gap: 10px;
     }
+        .topbar-nav {
+            gap: 15px;
+        }
+        
     .nav-item {
         font-size: 0.95em;
-    }
-}
-        @media (max-width: 480px) {
-    .topbar-nav {
-        display: none; /* 小屏幕隐藏导航项 */
     }
 }
     </style>
@@ -451,29 +452,24 @@
     </script>
 
     <div class="topbar">
-        <div class="brand-text">Royirin Rosmontis</div>
-        <div class="logo-container">
-            <a href="http://nothing.rrrosmontis.icu">
-                <img src="logo.png" class="right-logo" alt="网站Logo">
-            </a>
+    <div class="brand-text">Royirin Rosmontis</div>
+    
+    <!-- 将导航栏移到logo容器外部 -->
+    <nav class="topbar-nav">
+        <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+        <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
+    </nav>
 
-            <!-- 新增导航容器 -->
-        <nav class="topbar-nav">
-            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
-            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
-        </nav>
-            
-            <div class="dropdown-menu">
-                <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
-                <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
-            </div>
+    <div class="logo-container">
+        <a href="http://nothing.rrrosmontis.icu">
+            <img src="logo.png" class="right-logo" alt="网站Logo">
+        </a>
+        <div class="dropdown-menu">
+            <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
+            <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
         </div>
     </div>
-
-        <div id="dynamic-content">
-        <div id="line-number"></div>
-        <div id="content-text"></div>
-    </div>
+</div>
 
 
     
