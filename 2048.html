@@ -171,9 +171,9 @@
         }
 
         #game-board {
-        grid-template-columns: repeat(4, 1fr) !important;
-        pointer-events: none; /* 防止空单元格无法触发事件 */
-    }
+    grid-template-columns: repeat(4, 1fr);
+    min-height: 340px; /* 确保棋盘高度 */
+}
     
     .game-cell {
         pointer-events: auto; /* 恢复事件响应 */
@@ -262,10 +262,11 @@
         }
 
         .game-cell {
-        transition: all 0.15s ease;
-        position: relative;
-        transform: scale(1); /* 添加缩放属性 */
-    }
+    background-color: rgba(238, 228, 218, 0.35) !important;
+    opacity: 1 !important; /* 强制显示 */
+    visibility: visible !important;
+}
+
 
         /* 新增合并动画 */
         @keyframes merge-animation {
@@ -433,74 +434,54 @@
         }
 
         function updateBoard() {
-        const gameBoard = document.getElementById('game-board');
-        gameBoard.innerHTML = ''; // 清空棋盘重新渲染
-        
-        // 始终创建4x4的单元格
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
-                const value = board[i][j];
-                const cell = document.createElement('div');
-                cell.className = `game-cell${value ? ' number-' + value : ''}`;
-                cell.dataset.position = `${i}-${j}`;
-                cell.textContent = value || '';
-                gameBoard.appendChild(cell);
-            }
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.innerHTML = ''; // 清空棋盘
+    
+    for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+            const value = board[i][j];
+            const cell = document.createElement('div');
+            cell.className = `game-cell${value ? ' number-' + value : ''}`;
+            cell.dataset.position = `${i}-${j}`;
+            cell.textContent = value || '';
+            
+            // 强制保留空单元格背景
+            if (!value) cell.style.backgroundColor = "rgba(238, 228, 218, 0.35)";
+            
+            gameBoard.appendChild(cell);
         }
     }
-
-            // 更新/创建单元格
-            for (let i = 0; i < boardSize; i++) {
-                for (let j = 0; j < boardSize; j++) {
-                    const key = `${i}-${j}`;
-                    const value = board[i][j];
-                    let cell = existingCells.get(key);
-
-                    if (!cell) {
-                        cell = document.createElement('div');
-                        cell.className = `game-cell${value ? ' number-' + value : ''} new-cell`;
-                        cell.dataset.position = key;
-                        gameBoard.appendChild(cell);
-                    }
-
-                    cell.textContent = value || '';
-                    cell.className = `game-cell${value ? ' number-' + value : ''}`;
-                    cell.style.transform = '';
-                }
-            }
-
-            // 移除空单元格
-            existingCells.forEach((cell, key) => {
-                const [x, y] = key.split('-').map(Number);
-                if (board[x][y] === 0) cell.remove();
-            });
-        }
+}
 
         function animateMovement(oldBoard) {
+    requestAnimationFrame(() => {
         document.querySelectorAll('.game-cell').forEach(cell => {
             const [x, y] = cell.dataset.position.split('-').map(Number);
             const value = board[x][y];
             
-            // 查找旧位置（优化后的查找逻辑）
-            let oldX = x, oldY = y;
+            // 精确查找旧位置
+            let found = false;
             for (let i = 0; i < boardSize; i++) {
                 for (let j = 0; j < boardSize; j++) {
                     if (oldBoard[i][j] === value && (i !== x || j !== y)) {
-                        oldX = i;
-                        oldY = j;
+                        const dx = (y - j) * (cell.offsetWidth + 10);
+                        const dy = (x - i) * (cell.offsetHeight + 10);
+                        cell.style.transform = `translate(${dx}px, ${dy}px)`;
+                        found = true;
+                        break;
                     }
                 }
+                if (found) break;
             }
-
-            const dx = (y - oldY) * (cell.offsetWidth + 10); // 动态计算间距
-            const dy = (x - oldX) * (cell.offsetHeight + 10);
-            if (dx !== 0 || dy !== 0) {
-                cell.style.transform = `translate(${dx}px, ${dy}px)`;
-                setTimeout(() => cell.style.transform = '', 150);
-            }
+            
+            // 重置动画
+            setTimeout(() => {
+                cell.style.transform = '';
+                cell.style.transition = 'all 0.15s ease';
+            }, 150);
         });
-    }
-
+    });
+}
         function move(direction) {
         const oldBoard = JSON.parse(JSON.stringify(board));
         let moved = false;
