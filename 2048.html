@@ -9,7 +9,7 @@
   if (window.location.pathname === '/2048/') {
     window.location.href = '/2048.html';
   }
-    <title>New Page Style</title>
+    <title>Royirin Rosmontis Present - 2048</title>
     <style>
         * {
             margin: 0;
@@ -151,12 +151,59 @@
                 padding: 25px;
             }
         }
+
+           /* 在原有样式基础上添加游戏样式 */
+        #game-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* 2048游戏专用样式 */
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            background-color: #bbada0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px auto;
+        }
+
+        .game-cell {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(238, 228, 218, 0.35);
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #776e65;
+        }
+
+        /* 保留原有数字颜色样式 */
+        .number-2 { background-color: #eee4da; }
+        .number-4 { background-color: #ede0c8; }
+        /* ...其他数字颜色保持原样... */
+        
+        #game-score {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
     
     <div class="topbar">
-        <div class="brand-text">New Brand</div>
+        <div class="brand-text">Royirin Rosmontis</div>
         <div class="logo-container">
             <a href="#">
                 <img src="logo.png" class="right-logo" alt="Logo">
@@ -176,7 +223,7 @@
     </div>
 
     <div class="footer">
-        <p>© 2024 New Brand. All rights reserved.</p>
+        <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
     </div>
 
     <script>
@@ -199,6 +246,42 @@
         dropdownMenu.addEventListener('click', function(e) {
             e.stopPropagation();
         });
+    </script>
+
+       <div id="game-container">
+        <div id="game-score">Score: 0</div>
+        <div id="game-board"></div>
+        <p style="color:#666; margin-top:20px;">使用方向键移动方块</p>
+    </div>
+
+    <!-- 保留原有底部栏和其他内容 -->
+
+    <script>
+        // 在原有脚本后添加游戏逻辑
+        let board = [];
+        let score = 0;
+        const boardSize = 4;
+
+        function initGame() {
+            // 初始化游戏逻辑（保持原样）
+            // ...
+        }
+
+        // 其他游戏函数保持原样
+        // ...
+
+        // 修改事件监听器避免冲突
+        document.addEventListener('keydown', (event) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.preventDefault();
+                if(!document.querySelector('.dropdown-menu.active')) { // 防止菜单打开时操作
+                    move(event.key);
+                }
+            }
+        });
+
+        // 初始化游戏
+        initGame();
     </script>
 </body>
 </html>
