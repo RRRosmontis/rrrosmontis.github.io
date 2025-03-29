@@ -251,18 +251,17 @@
 
         /* 移动端方向按钮 */
          .mobile-controls {
-            position: relative; /* 改为相对定位 */
-            bottom: auto;
-            left: auto;
-            transform: none;
-            margin-top: 20px; /* 增加上方间距 */
-        }
-
+    display: none;
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+}
         .control-row {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+    display: flex;
+    gap: 10px;
+}
 
         .control-btn {
             width: 60px;
@@ -306,11 +305,11 @@
         }
 
          .mobile-controls {
-            display: grid;
-        }
-        #game-container {
-            top: 45%;
-        }
+        display: flex;
+    }
+    #game-container {
+        top: 40%; /* 调整游戏容器位置 */
+    }
 
     }
     </style>
@@ -393,19 +392,14 @@
         <div id="game-board"></div>
         
         <!-- 新增移动端控制按钮 -->
- <div class="mobile-controls">
-            <div class="control-row">
-                <div class="control-btn" data-direction="ArrowUp">↑</div>
-            </div>
-            <div class="control-row">
-                <div class="control-btn" data-direction="ArrowLeft">←</div>
-                <div class="control-btn" data-direction="ArrowRight">→</div>
-            </div>
-            <div class="control-row">
-                <div class="control-btn" data-direction="ArrowDown">↓</div>
-            </div>
-        </div>
+<div class="mobile-controls">
+    <div class="control-row">
+        <div class="control-btn" data-direction="ArrowLeft">←</div>
+        <div class="control-btn" data-direction="ArrowUp">↑</div>
+        <div class="control-btn" data-direction="ArrowDown">↓</div>
+        <div class="control-btn" data-direction="ArrowRight">→</div>
     </div>
+</div>
     
     <script>
 
@@ -496,53 +490,52 @@
 
 
         function moveVertical(up) {
-            let moved = false;
-            for (let j = 0; j < boardSize; j++) {
-                const column = [];
-                for (let i = 0; i < boardSize; i++) column.push(board[i][j]);
-                const newColumn = processLine(up ? column : column.reverse(), up);
-                if (!up) newColumn.reverse();
-
-                for (let i = 0; i < boardSize; i++) {
-                    if (board[i][j] !== newColumn[i]) {
-                        board[i][j] = newColumn[i];
-                        moved = true;
-                    }
-                }
+    let moved = false;
+    for (let j = 0; j < boardSize; j++) {
+        let column = [];
+        for (let i = 0; i < boardSize; i++) column.push(board[i][j]);
+        if (!up) column = column.reverse();
+        const newColumn = processLine(column, true);
+        if (!up) newColumn.reverse();
+        for (let i = 0; i < boardSize; i++) {
+            if (board[i][j] !== newColumn[i]) {
+                board[i][j] = newColumn[i];
+                moved = true;
             }
-            return moved;
         }
+    }
+    return moved;
+}
 
         function moveHorizontal(left) {
-            let moved = false;
-            for (let i = 0; i < boardSize; i++) {
-                const newRow = processLine(left ? board[i] : [...board[i]].reverse(), left);
-                if (!left) newRow.reverse();
-                if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
-                    board[i] = newRow;
-                    moved = true;
-                }
-            }
-            return moved;
+    let moved = false;
+    for (let i = 0; i < boardSize; i++) {
+        const row = left ? board[i] : [...board[i]].reverse();
+        const newRow = processLine(row, true);
+        if (!left) newRow.reverse();
+        if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
+            board[i] = newRow;
+            moved = true;
         }
+    }
+    return moved;
+}
 
         function processLine(line, isForward) {
-            let arr = line.filter(x => x !== 0);
-            for (let i = isForward ? 0 : arr.length - 1; 
-                 isForward ? i < arr.length - 1 : i > 0; 
-                 isForward ? i++ : i--) {
-                if (arr[i] === arr[isForward ? i + 1 : i - 1]) {
-                    arr[isForward ? i : i - 1] *= 2;
-                    score += arr[isForward ? i : i - 1];
-                    arr.splice(isForward ? i + 1 : i, 1);
-                    if (isForward) i--;
-                }
-            }
-            while (arr.length < boardSize) {
-                isForward ? arr.push(0) : arr.unshift(0);
-            }
-            return arr;
+    let arr = line.filter(x => x !== 0);
+    for (let i = 0; i < arr.length - 1; i++) {
+        if (arr[i] === arr[i + 1]) {
+            arr[i] *= 2;
+            score += arr[i];
+            arr.splice(i + 1, 1);
+            arr.push(0); // 填充一个0以保持长度
         }
+    }
+    while (arr.length < boardSize) {
+        arr.push(0);
+    }
+    return arr;
+}
 
         function checkGameOver() {
             for (let i = 0; i < boardSize; i++) {
