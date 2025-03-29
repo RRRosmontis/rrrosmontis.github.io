@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+      // 自动将路径从 /2048.html 重定向到 /2048
+  if (window.location.pathname === '/2048.html') {
+    window.history.replaceState({}, '', '/2048');
+  }
+  // 如果用户直接访问 /2048，自动补全路径到 /2048.html
+  if (window.location.pathname === '/2048/') {
+    window.location.href = '/2048.html';
+  }
     <title>New Page Style</title>
     <style>
         * {
@@ -146,14 +154,6 @@
     </style>
 </head>
 <body>
-      // 自动将路径从 /2048.html 重定向到 /2048
-  if (window.location.pathname === '/2048.html') {
-    window.history.replaceState({}, '', '/2048');
-  }
-  // 如果用户直接访问 /2048，自动补全路径到 /2048.html
-  if (window.location.pathname === '/2048/') {
-    window.location.href = '/2048.html';
-  }
     
     <div class="topbar">
         <div class="brand-text">New Brand</div>
