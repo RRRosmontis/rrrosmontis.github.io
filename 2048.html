@@ -409,6 +409,10 @@
     
     <script>
 
+         let currentScore = 0;
+    let animationFrameId = null;
+
+        
         // 新增导航链接事件处理
         document.querySelectorAll('.nav-item').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -438,15 +442,16 @@
         const boardSize = 4;
 
         function initGame() {
-            board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-            const gameBoard = document.getElementById('game-board');
-            gameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
-            score = 0;
-            updateScore();
-            addNewNumber();
-            addNewNumber();
-            updateBoard();
-        }
+        board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+        const gameBoard = document.getElementById('game-board');
+        gameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+        score = 0;
+        currentScore = 0;  // 新增重置
+        updateScore();
+        addNewNumber();
+        addNewNumber();
+        updateBoard();
+    }
 
         function addNewNumber() {
             const emptyCells = [];
@@ -479,9 +484,31 @@
             }
         }
 
-        function updateScore() {
-            document.getElementById('game-score').textContent = `Score: ${score}`;
+         function updateScore() {
+        const targetScore = score;
+        const startScore = currentScore;
+        const duration = 1000;
+        const startTime = Date.now();
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
         }
+
+        function animate() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            currentScore = Math.floor(startScore + (targetScore - startScore) * progress);
+            document.getElementById('game-score').textContent = `Score: ${currentScore}`;
+            
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(animate);
+            } else {
+                currentScore = targetScore;
+                animationFrameId = null;
+            }
+        }
+        animate();
+    }
 
        function move(direction) {
             let moved = false;
