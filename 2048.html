@@ -231,13 +231,14 @@
             max-width: 800px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: auto;
-            height: auto;
+            width: 80vmin;
+            height: 80vmin;
             max-width: 90vmin;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            box-sizing: content-box；
         }
 
         /* 修改虚拟方向键样式 */
@@ -338,6 +339,13 @@
     .game-cell {
         font-size: 6vmin;
     }
+}
+
+        @viewport {
+    width: device-width;
+    initial-scale: 1.0;
+    maximum-scale: 1.0;
+    user-scalable: no;
 }
     </style>
 </head>
@@ -463,9 +471,11 @@
 }
 
         function animateMovement(oldBoard) {
+    const cellSize = document.querySelector('.game-cell').offsetWidth; // 获取实际单元格尺寸
     document.querySelectorAll('.game-cell').forEach(cell => {
-        cell.style.transition = 'none'; // 禁用过渡以立即定位
+        cell.style.transition = 'none';
         const [x, y] = cell.dataset.position.split('-').map(Number);
+        let oldX, oldY;
         // 查找旧位置
         let oldX, oldY;
         for (let i = 0; i < boardSize; i++) {
@@ -477,11 +487,10 @@
                 }
             }
         }
-        if (oldX !== undefined) {
-            const dx = (y - oldY) * 100 + '%';
-            const dy = (x - oldX) * 100 + '%';
-            cell.style.transform = `translate(${dx}, ${dy})`;
-            // 强制重绘后恢复动画
+         if (oldX !== undefined) {
+            const dx = (y - oldY) * (cellSize + 10); // 使用实际单元格宽度+间距
+            const dy = (x - oldX) * (cellSize + 10);
+            cell.style.transform = `translate(${dx}px, ${dy}px)`;
             void cell.offsetWidth;
             cell.style.transition = 'all 0.15s ease';
             cell.style.transform = '';
