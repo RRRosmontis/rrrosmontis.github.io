@@ -232,13 +232,14 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 80vmin;
-            height: 80vmin;
+            height: auto;
             max-width: 90vmin;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             box-sizing: content-box；
+            z-index: 500; /* 低于顶栏(1000)但高于底栏(999) */
         }
 
         /* 修改虚拟方向键样式 */
@@ -458,45 +459,57 @@
         function updateBoard() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
+    // 强制设置棋盘尺寸
+    const containerWidth = document.getElementById('game-container').offsetWidth;
+    gameBoard.style.width = containerWidth * 0.9 + 'px'; // 90%容器宽度
+    gameBoard.style.height = gameBoard.style.width; // 保持正方形
+    
     for (let i = 0; i < boardSize; i++) {
         for (let j = 0; j < boardSize; j++) {
             const value = board[i][j];
             const cell = document.createElement('div');
             cell.className = `game-cell${value ? ' number-' + value : ''}`;
-            cell.dataset.position = `${i}-${j}`;
             cell.textContent = value || '';
+            cell.style.fontSize = Math.min(containerWidth/10, 40) + 'px'; // 动态字体
             gameBoard.appendChild(cell);
         }
     }
 }
 
         function animateMovement(oldBoard) {
-    const cellSize = document.querySelector('.game-cell').offsetWidth; // 获取实际单元格尺寸
-    document.querySelectorAll('.game-cell').forEach(cell => {
-        cell.style.transition = 'none';
-        const [x, y] = cell.dataset.position.split('-').map(Number);
-        let oldX, oldY;
-        // 查找旧位置
-        let oldX, oldY;
+    const cells = document.querySelectorAll('.game-cell');
+    const cellSize = cells[0]?.offsetWidth || 0; // 安全获取尺寸
+    
+    cells.forEach((cell, index) => {
+        const x = Math.floor(index / boardSize);
+        const y = index % boardSize;
+        const oldValue = oldBoard[x][y];
+        
+        // 查找新位置
+        let newX, newY;
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
-                if (oldBoard[i][j] === board[x][y] && (i !== x || j !== y)) {
-                    oldX = i;
-                    oldY = j;
+                if (board[i][j] === oldValue && (i !== x || j !== y)) {
+                    newX = i;
+                    newY = j;
                     break;
                 }
             }
         }
-         if (oldX !== undefined) {
-            const dx = (y - oldY) * (cellSize + 10); // 使用实际单元格宽度+间距
-            const dy = (x - oldX) * (cellSize + 10);
+        
+        if (newX !== undefined) {
+            const dx = (y - newY) * (cellSize + 10);
+            const dy = (x - newX) * (cellSize + 10);
             cell.style.transform = `translate(${dx}px, ${dy}px)`;
+            // 强制重绘后恢复
             void cell.offsetWidth;
             cell.style.transition = 'all 0.15s ease';
             cell.style.transform = '';
         }
     });
 }
+
+        
         function move(direction) {
         const oldBoard = JSON.parse(JSON.stringify(board));
         let moved = false;
