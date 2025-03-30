@@ -13,6 +13,10 @@
             font-display: swap;
         }
 
+        .game-cell {
+            transition: all 0.15s ease;
+            position: relative;
+        }
         
         * {
             margin: 0;
@@ -176,20 +180,18 @@
             margin: 20px auto;
         }
 
-    .game-cell {
-        width: 80px;
-        height: 80px;
-        background-color: rgba(245, 245, 245, 0.35);
-        border-radius: 3px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: #776e65;
-        transition: all 0.15s ease;
-        position: relative;
-    }
+        .game-cell {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(245, 245, 245, 0.35); /* 改为更白的底色 */
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #776e65;
+        }
 
         .number-2 { background-color: #e6f0ff; }
         .number-4 { background-color: #b3d4ff; }
@@ -343,6 +345,51 @@
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
     </div>
 
+    <script>
+    // 顶栏交互逻辑
+    const hamburger = document.querySelector('.hamburger');
+    const topbarNav = document.querySelector('.topbar-nav');
+    const logoContainer = document.querySelector('.logo-container');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    // 汉堡菜单点击事件
+    hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        topbarNav.classList.toggle('active');
+    });
+
+    // 关闭导航菜单
+    document.addEventListener('click', function(e) {
+        topbarNav.classList.remove('active');
+    });
+
+    // Logo 点击显示下拉菜单
+    document.querySelector('.right-logo').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+    });
+
+    // 点击页面其他区域关闭下拉菜单
+    document.addEventListener('click', function(e) {
+        if (!logoContainer.contains(e.target)) {
+            dropdownMenu.classList.remove('active');
+        }
+    });
+
+    // 阻止下拉菜单点击事件冒泡
+    dropdownMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
+    document.querySelectorAll('.nav-item').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.stopPropagation(); // 阻止事件冒泡
+        dropdownMenu.classList.remove('active'); // 关闭可能打开的下拉菜单
+    });
+});
+</script>
+
         <div id="game-container">
         <p style="color:#666; margin:0 0 10px 0;">使用方向键移动方块</p>
         <div id="game-score">Score: 0</div>
@@ -360,102 +407,210 @@
     </div>
 
     
-   <script>
-    // 合并后的完整脚本
-    // 顶栏交互逻辑
-    const hamburger = document.querySelector('.hamburger');
-    const topbarNav = document.querySelector('.topbar-nav');
-    const logoContainer = document.querySelector('.logo-container');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    
-    // 游戏逻辑
-    let board = [];
-    let score = 0;
-    let currentScore = 0;
+    <script>
+
+         let currentScore = 0;
     let animationFrameId = null;
-    const boardSize = 4;
 
-    // 事件监听器统一注册
-    function initEventListeners() {
-        // 顶栏交互
-        hamburger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            topbarNav.classList.toggle('active');
-        });
-
-        document.querySelector('.right-logo').addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            topbarNav.classList.remove('active');
-            if (!logoContainer.contains(e.target)) {
-                dropdownMenu.classList.remove('active');
-            }
-        });
-
-        dropdownMenu.addEventListener('click', (e) => e.stopPropagation());
-
-        // 游戏控制
-        document.addEventListener('keydown', (e) => {
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                e.preventDefault();
-                move(e.key);
-            }
-        });
-
-        document.querySelectorAll('.control-btn').forEach(btn => {
-            btn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                move(e.target.dataset.direction);
-            });
-            btn.addEventListener('click', (e) => move(e.target.dataset.direction));
-        });
-
-        // 导航链接
+        
+        // 新增导航链接事件处理
         document.querySelectorAll('.nav-item').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dropdownMenu.classList.remove('active');
             });
         });
-    }
+        
+        logoContainer.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
 
-    // 合并后的移动逻辑
-    function move(direction) {
-        const moveActions = {
-            ArrowUp: () => moveVertical(true),
-            ArrowDown: () => moveVertical(false),
-            ArrowLeft: () => moveHorizontal(true),
-            ArrowRight: () => moveHorizontal(false)
-        };
+        document.addEventListener('click', function(e) {
+            if (!logoContainer.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
 
-        if (moveActions[direction]?.()) {
-            addNewNumber();
-            updateBoard();
-            updateScore();
-            checkGameOver();
-        }
-    }
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
 
-    // 初始化游戏
-    function initGame() {
-        board = Array.from({length: boardSize}, () => Array(boardSize).fill(0));
-        document.getElementById('game-board').style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
-        score = currentScore = 0;
+        let board = [];
+        let score = 0;
+        const boardSize = 4;
+
+        function initGame() {
+        board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+        const gameBoard = document.getElementById('game-board');
+        gameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+        score = 0;
+        currentScore = 0;  // 新增重置
         updateScore();
-        [2, 4].forEach(() => addNewNumber());
+        addNewNumber();
+        addNewNumber();
         updateBoard();
     }
 
-    // 其他游戏函数保持原有优化结构...
+        function addNewNumber() {
+            const emptyCells = [];
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    if (board[i][j] === 0) emptyCells.push({x: i, y: j});
+                }
+            }
+            if (emptyCells.length > 0) {
+                const {x, y} = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                board[x][y] = Math.random() < 0.9 ? 2 : 4;
+            }
+        }
 
-    // 初始化
-    initEventListeners();
-    initGame();
-</script>
+        function updateBoard() {
+            const gameBoard = document.getElementById('game-board');
+            const cells = gameBoard.children;
+            gameBoard.innerHTML = '';
+            
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'game-cell';
+                    if (board[i][j] !== 0) {
+                        cell.classList.add(`number-${board[i][j]}`);
+                        cell.textContent = board[i][j];
+                    }
+                    gameBoard.appendChild(cell);
+                }
+            }
+        }
+
+         function updateScore() {
+        const targetScore = score;
+        const startScore = currentScore;
+        const duration = 500;
+        const startTime = Date.now();
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        function animate() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            currentScore = Math.floor(startScore + (targetScore - startScore) * progress);
+            document.getElementById('game-score').textContent = `Score: ${currentScore}`;
+            
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(animate);
+            } else {
+                currentScore = targetScore;
+                animationFrameId = null;
+            }
+        }
+        animate();
+    }
+
+       function move(direction) {
+            let moved = false;
+            const originalBoard = JSON.stringify(board);
+
+            switch(direction) {
+                case 'ArrowUp': moved = moveVertical(true); break;
+                case 'ArrowDown': moved = moveVertical(false); break;
+                case 'ArrowLeft': moved = moveHorizontal(true); break;
+                case 'ArrowRight': moved = moveHorizontal(false); break;
+            }
+
+            if (moved) {
+                addNewNumber();
+                updateBoard();
+                updateScore();
+                checkGameOver();
+            }
+        }
+
+
+        function moveVertical(up) {
+    let moved = false;
+    for (let j = 0; j < boardSize; j++) {
+        let column = [];
+        for (let i = 0; i < boardSize; i++) column.push(board[i][j]);
+        if (!up) column = column.reverse();
+        const newColumn = processLine(column, true);
+        if (!up) newColumn.reverse();
+        for (let i = 0; i < boardSize; i++) {
+            if (board[i][j] !== newColumn[i]) {
+                board[i][j] = newColumn[i];
+                moved = true;
+            }
+        }
+    }
+    return moved;
+}
+
+        function moveHorizontal(left) {
+    let moved = false;
+    for (let i = 0; i < boardSize; i++) {
+        const row = left ? board[i] : [...board[i]].reverse();
+        const newRow = processLine(row, true);
+        if (!left) newRow.reverse();
+        if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
+            board[i] = newRow;
+            moved = true;
+        }
+    }
+    return moved;
+}
+
+        function processLine(line, isForward) {
+    let arr = line.filter(x => x !== 0);
+    for (let i = 0; i < arr.length - 1; i++) {
+        if (arr[i] === arr[i + 1]) {
+            arr[i] *= 2;
+            score += arr[i];
+            arr.splice(i + 1, 1);
+            arr.push(0); // 填充一个0以保持长度
+        }
+    }
+    while (arr.length < boardSize) {
+        arr.push(0);
+    }
+    return arr;
+}
+
+        function checkGameOver() {
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    if (board[i][j] === 0) return false;
+                    if (i < boardSize - 1 && board[i][j] === board[i + 1][j]) return false;
+                    if (j < boardSize - 1 && board[i][j] === board[i][j + 1]) return false;
+                }
+            }
+            alert('Game Over!');
+            return true;
+        }
+
+         document.addEventListener('keydown', (e) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                move(e.key);
+            }
+        });
+
+        initGame();
+
+                    // 添加移动端控制
+         document.querySelectorAll('.control-btn').forEach(btn => {
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                move(e.target.dataset.direction);
+            });
+            btn.addEventListener('click', (e) => { // 添加点击事件支持桌面调试
+                move(e.target.dataset.direction);
+            });
+        });
+
+    </script>
     
 </body>
 </html>
