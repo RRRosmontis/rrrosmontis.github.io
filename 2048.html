@@ -167,21 +167,28 @@
         }
 
         #game-board {
+    display: grid; /* 启用网格布局 */
     grid-template-columns: repeat(4, 1fr);
-    min-height: 340px; /* 确保棋盘高度 */
+    gap: 10px; /* 单元格间距 */
+    aspect-ratio: 1; /* 确保棋盘为正方形 */
+    width: 80vmin; /* 根据视口动态调整 */
+    max-width: 500px;
+    margin: 0 auto; /* 居中 */
 }
     
     .game-cell {
-        transition: all 0.15s ease;
-        position: relative;
-        background-color: rgba(238, 228, 218, 0.35) !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        aspect-ratio: 1; /* 保持单元格为正方形 */
-    }
+    transition: all 0.15s ease;
+    position: relative;
+    background-color: rgba(238, 228, 218, 0.35) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1; /* 强制正方形 */
+    font-size: 5vmin; /* 动态字体大小 */
+    border-radius: 8px; /* 圆角匹配设计 */
+}
 
         .number-2 { background-color: #e6f0ff; }
         .number-4 { background-color: #b3d4ff; }
@@ -219,14 +226,14 @@
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             margin: 30px auto;
             max-width: 800px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 90vmin;
+            width: auto;
             height: auto;
-            max-width: 500px;
+            max-width: 90vmin;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -433,9 +440,6 @@
         function updateBoard() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    // 添加棋盘尺寸定义（假设单元格间距为10px）
-    const cellSize = `calc((100% - ${(boardSize - 1) * 10}px) / ${boardSize})`;
-    gameBoard.style.gap = '10px'; // 添加间距
     for (let i = 0; i < boardSize; i++) {
         for (let j = 0; j < boardSize; j++) {
             const value = board[i][j];
@@ -443,7 +447,6 @@
             cell.className = `game-cell${value ? ' number-' + value : ''}`;
             cell.dataset.position = `${i}-${j}`;
             cell.textContent = value || '';
-            cell.style.width = cellSize; // 强制统一宽度
             gameBoard.appendChild(cell);
         }
     }
