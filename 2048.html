@@ -171,9 +171,11 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 10px; /* 单元格间距 */
     aspect-ratio: 1; /* 确保棋盘为正方形 */
-    width: 80vmin; /* 根据视口动态调整 */
+    width: 100% !important;
     max-width: 500px;
     margin: 0 auto; /* 居中 */
+    padding: 10px;
+    box-sizing: border-box;
 }
     
     .game-cell {
@@ -188,6 +190,9 @@
     aspect-ratio: 1; /* 强制正方形 */
     font-size: 5vmin; /* 动态字体大小 */
     border-radius: 8px; /* 圆角匹配设计 */
+    width: calc(25% - 7.5px) !important;
+    height: calc(25% - 7.5px) !important;
+    margin: 0;
 }
 
         .number-2 { background-color: #e6f0ff; }
@@ -228,10 +233,11 @@
             border-radius: 20px;
             padding: 30px;
             margin: 30px auto;
-            max-width: 800px;
+            min-width: 300px;
+            max-width: 500px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 80vmin;
+            width: 90vmin;
             height: auto;
             max-width: 90vmin;
             position: absolute;
@@ -459,10 +465,10 @@
         function updateBoard() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    // 强制设置棋盘尺寸
-    const containerWidth = document.getElementById('game-container').offsetWidth;
-    gameBoard.style.width = containerWidth * 0.9 + 'px'; // 90%容器宽度
-    gameBoard.style.height = gameBoard.style.width; // 保持正方形
+    
+    // 获取当前棋盘尺寸
+    const containerWidth = gameBoard.offsetWidth;
+    const cellSize = (containerWidth - 30) / 4; // 总宽度减去30px间隙
     
     for (let i = 0; i < boardSize; i++) {
         for (let j = 0; j < boardSize; j++) {
@@ -470,42 +476,51 @@
             const cell = document.createElement('div');
             cell.className = `game-cell${value ? ' number-' + value : ''}`;
             cell.textContent = value || '';
-            cell.style.fontSize = Math.min(containerWidth/10, 40) + 'px'; // 动态字体
+            
+            // 动态设置单元格尺寸
+            cell.style.width = cellSize + 'px';
+            cell.style.height = cellSize + 'px';
+            cell.style.fontSize = cellSize * 0.4 + 'px'; // 字体为单元格大小的40%
+            
             gameBoard.appendChild(cell);
         }
     }
 }
-
         function animateMovement(oldBoard) {
     const cells = document.querySelectorAll('.game-cell');
-    const cellSize = cells[0]?.offsetWidth || 0; // 安全获取尺寸
-    
+    const cellSize = cells[0]?.offsetWidth || 0;
+
     cells.forEach((cell, index) => {
-        const x = Math.floor(index / boardSize);
-        const y = index % boardSize;
+        const x = Math.floor(index / 4);
+        const y = index % 4;
+        const currentValue = board[x][y];
         const oldValue = oldBoard[x][y];
-        
-        // 查找新位置
-        let newX, newY;
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
-                if (board[i][j] === oldValue && (i !== x || j !== y)) {
-                    newX = i;
-                    newY = j;
+
+        // 标记合并动画
+        if (currentValue === oldValue * 2) {
+            cell.classList.add('merged');
+            setTimeout(() => cell.classList.remove('merged'), 150);
+        }
+
+        // 查找旧位置
+        let found = false;
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (oldBoard[i][j] === currentValue && (i !== x || j !== y)) {
+                    const dx = (j - y) * (cellSize + 10);
+                    const dy = (i - x) * (cellSize + 10);
+                    cell.style.transform = `translate(${dx}px, ${dy}px)`;
+                    found = true;
                     break;
                 }
             }
+            if (found) break;
         }
-        
-        if (newX !== undefined) {
-            const dx = (y - newY) * (cellSize + 10);
-            const dy = (x - newX) * (cellSize + 10);
-            cell.style.transform = `translate(${dx}px, ${dy}px)`;
-            // 强制重绘后恢复
-            void cell.offsetWidth;
-            cell.style.transition = 'all 0.15s ease';
-            cell.style.transform = '';
-        }
+
+        // 强制重绘动画
+        void cell.offsetWidth;
+        cell.style.transition = 'all 0.15s ease';
+        cell.style.transform = '';
     });
 }
 
