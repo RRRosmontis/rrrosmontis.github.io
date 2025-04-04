@@ -57,8 +57,8 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 30px; /* 控制导航项与logo的间距 */
-            margin-left: auto; /* 将整个logo容器推到右侧 */
+            gap: 30px;
+            margin-left: auto;
         }
 
         @keyframes spin {
@@ -136,7 +136,7 @@
         .topbar-nav {
             display: flex;
             gap: 20px;
-            order: -1; /* 使导航项显示在logo左侧 */
+            order: -1;
             margin-right: 0;
         }
         
@@ -152,10 +152,9 @@
         }
         
         .nav-item:hover {
-            color: #3498db; /* 悬停颜色 */
+            color: #3498db;
         }
         
-        /* 添加下划线动画效果 */
         .nav-item::after {
             content: '';
             position: absolute;
@@ -232,30 +231,30 @@
             color: #666;
             border-top: 1px solid #eee;
             z-index: 999;
-            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; /* 添加字体声明 */
+            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; 
         }
 
-            .title-container {
-            margin: 0 auto; 
-            font-weight: bold;
-            font-size: 13px; 
-        }
-
-            .content-info-text {
-              font-size: 14px;
-              color: #cccccc; 
-              text-align: center; 
-              margin: 0 auto; 
-            }
-
-    .custom-hr {
-        border: none;
-        height: 1px;
-        background-color: #ccc;
-        width: 40%; /* 设置为90%宽度 */
-        margin: 20px auto; /* 居中 */
-        opacity: 0.6; /* 添加透明度使更柔和 */
+        .title-container {
+        margin: 0 auto; 
+        font-weight: bold;
+        font-size: 13px; 
     }
+
+        .content-info-text {
+          font-size: 14px;
+          color: #cccccc; 
+          text-align: center; 
+          margin: 0 auto; 
+        }
+
+        .custom-hr {
+            border: none;
+            height: 1px;
+            background-color: #ccc;
+            width: 40%;
+            margin: 20px auto; 
+            opacity: 0.6;
+        }
 
         .toc-container {
         position: fixed;
@@ -378,23 +377,23 @@
         }
         
             .additional-box {
-                margin-left: 200px; /* 给目录留出空间 */
+                margin-left: 200px; 
             }
             .custom-hr {
                 border: none;
                 height: 1px;
                 background-color: #ccc;
-                width: 70%; /* 设置为90%宽度 */
-                margin: 20px auto; /* 居中 */
-                opacity: 0.6; /* 添加透明度使更柔和 */
+                width: 70%; 
+                margin: 20px auto; 
+                opacity: 0.6; 
             }
             .toc-container {
             position: fixed;
             left: 0;
             right: 0;
-            bottom: 60px; /* 位于footer上方 */
-            top: auto; /* 取消顶部定位 */
-            transform: none; /* 取消垂直居中 */
+            bottom: 60px; 
+            top: auto; 
+            transform: none; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -430,14 +429,13 @@
 
         .toc-list a:hover {
             background: rgba(44, 62, 80, 0.2);
-            padding-left: 12px; /* 取消悬停时的左侧padding变化 */
+            padding-left: 12px; 
         }
 
         .toc-list a::before {
-            display: none; /* 移除圆点标记 */
+            display: none;
         }
 
-          /* 新增以下样式 */
         .topbar-nav {
             position: absolute;
             top: 100%;
@@ -458,7 +456,6 @@
             padding: 10px 0;
         }
         
-        /* 移除原有.additional-box的margin-left */
         .additional-box {
             margin-left: auto;
 
@@ -507,7 +504,7 @@
             <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
         </nav>
         
-        <a href="http://nothing.rrrosmontis.icu">
+        <a href="http://rrrosmontis.icu">
             <img src="logo.png" class="right-logo" alt="网站Logo">
         </a>
         <div class="dropdown-menu">
