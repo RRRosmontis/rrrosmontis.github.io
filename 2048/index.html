@@ -249,7 +249,7 @@
             justify-content: center;
             margin-top: 30px;
         }
-
+        
         .control-row {
             display: flex;
             gap: 15px;
@@ -272,6 +272,33 @@
 
         .control-btn:active {
             transform: scale(0.95);
+        }
+
+        control-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            place-items: center;
+        }
+        
+        .control-btn[data-direction="ArrowUp"] {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .control-btn[data-direction="ArrowLeft"] {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        .control-btn[data-direction="ArrowRight"] {
+            grid-column: 3;
+            grid-row: 2;
+        }
+        
+        .control-btn[data-direction="ArrowDown"] {
+            grid-column: 2;
+            grid-row: 3;
         }
 
         @media (max-width: 768px) {
@@ -308,6 +335,14 @@
                 width: 60px;
                 height: 60px;
                 font-size: 24px;
+            }
+
+                .control-grid {
+                gap: 10px;
+            }
+            .control-btn {
+                width: 60px;
+                height: 60px;
             }
         }
     </style>
@@ -398,13 +433,13 @@
         
         <!-- 修改后的虚拟方向键 -->
         <div class="mobile-controls">
-            <div class="control-row">
-                <div class="control-btn" data-direction="ArrowLeft">←</div>
+            <div class="control-grid">
                 <div class="control-btn" data-direction="ArrowUp">↑</div>
-                <div class="control-btn" data-direction="ArrowDown">↓</div>
+                <div class="control-btn" data-direction="ArrowLeft">←</div>
                 <div class="control-btn" data-direction="ArrowRight">→</div>
+                <div class="control-btn" data-direction="ArrowDown">↓</div>
             </div>
-        </div>
+</div>
     </div>
 
     
