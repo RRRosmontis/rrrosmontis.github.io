@@ -274,11 +274,11 @@
             transform: scale(0.95);
         }
 
-        control-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        .control-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 15px;
-            place-items: center;
         }
         
         .control-btn[data-direction="ArrowUp"] {
@@ -299,6 +299,11 @@
         .control-btn[data-direction="ArrowDown"] {
             grid-column: 2;
             grid-row: 3;
+        }
+
+        .row-center {
+            display: flex;
+            gap: 30px;  /* 控制左右箭头间距 */
         }
 
         @media (max-width: 768px) {
@@ -340,10 +345,13 @@
                 .control-grid {
                 gap: 10px;
             }
+                .row-center {
+                gap: 20px;
+            }
             .control-btn {
                 width: 60px;
                 height: 60px;
-            }
+    }
         }
     </style>
 </head>
