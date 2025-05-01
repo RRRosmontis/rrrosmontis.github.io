@@ -4,14 +4,14 @@
     <title>Royirin Rosmontis Presents</title>
     <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
     <link rel="preload" href="/Kazesawa-Regular.ttf" as="font" type="font/ttf" crossorigin>
-        <style>
+    <style>
 
         @font-face {
             font-family: 'Kazesawa-Regular';
             src: url('/Kazesawa-Regular.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
-            font-display: swap; /* 优化字体加载显示 */
+            font-display: swap; 
         }
         * {
             margin: 0;
@@ -43,6 +43,16 @@
             gap: 20px;
         }
 
+        .brand-text {
+            font-size: 1.8em;
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; /* 添加字体声明 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
 
         .logo-container {
             display: flex;
@@ -160,6 +170,47 @@
             width: 100%;
         }
 
+        #dynamic-content {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 200px;
+        }
+
+        .additional-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 0 auto 60px;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 200px;
+        }
+
+        #line-number {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #2c3e50;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #content-text {
+            font-size: 1.8em;
+            color: #666;
+            min-height: 1.5em;
+            letter-spacing: 1px;
+            opacity: 1;
+        }
+
         .typing-cursor {
             display: inline-block;
             width: 3px;
@@ -205,11 +256,25 @@
                 height: 60px;
                 padding: 0 20px;
             }
+            
+            .brand-text {
+                font-size: 1.4em;
+            }
 
             .right-logo {
                 height: 35px;
             }
 
+            #dynamic-content {
+                margin-top: 80px;
+                padding: 25px;
+            }
+
+            .additional-box {
+                padding: 25px;
+                margin: 0 auto 30px;
+                min-height: 150px;
+            }
 
             #line-number {
                 font-size: 2em;
@@ -231,7 +296,12 @@
                 font-size: 0.8em;
                 padding: 12px 0;
             }
+
         
+            .additional-box {
+                margin-left: 200px; 
+            }
+
 
         .topbar-nav {
             position: absolute;
@@ -278,6 +348,50 @@
     </style>
 </head>
 <body>
+<script>
+    document.querySelectorAll('.toc-list a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    });
+</script>
+
+<div class="topbar">
+    <div class="brand-text">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓶𝓸𝓷𝓽𝓲𝓼</div>
+    
+   <div class="logo-container">
+        <nav class="topbar-nav">
+            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
+            <a href="http://rrrosmontis.icu/YbbLolicon" class="nav-item">YbbLolicon</a>
+        </nav>
+        
+        <a href="http://rrrosmontis.icu">
+            <img src="logo.png" class="right-logo" alt="网站Logo">
+        </a>
+        <div class="dropdown-menu">
+            <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
+            <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
+        </div>
+    </div>
+
+    <div class="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</div>
+    
+    <div class="footer">
+        <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
+    </div>
+
+
     <script>
         const logoContainer = document.querySelector('.logo-container');
         const dropdownMenu = document.querySelector('.dropdown-menu');
@@ -311,43 +425,9 @@
             e.stopPropagation();
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-    const contentText = document.getElementById('content-text');
-    const lineNumber = document.getElementById('line-number');
-    }
-                                  
-});
-</script>
+    </script> 
 
-<div class="topbar">
-    <div class="brand-text">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓶𝓸𝓷𝓽𝓲𝓼</div>
-    
-   <div class="logo-container">
-        <nav class="topbar-nav">
-            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
-            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
-            <a href="http://rrrosmontis.icu/YbbLolicon" class="nav-item">YbbLolicon</a>
-        </nav>
-        
-        <a href="http://rrrosmontis.icu">
-            <img src="logo.png" class="right-logo" alt="网站Logo">
-        </a>
-        <div class="dropdown-menu">
-            <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
-            <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
-        </div>
-    </div>
+<!-- 以上为网页主架构 -->
 
-    <div class="hamburger">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </div>
-</div>
-  
-    <div class="footer">
-        <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
-    </div>      
-    <!-- 以上为网页主架构 -->
 </body>
 </html>
