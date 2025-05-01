@@ -26,6 +26,7 @@
             min-height: 100vh;
             background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
                         url('/background.jpg') center/cover fixed;
+            overflow-x: hidden;
     }
 
         .topbar {
@@ -325,12 +326,15 @@
         background: #dee2e6;
     }
 
-    #minesweeper-container {
+    /* 确保游戏容器层级和定位 */
+#minesweeper-container {
     position: relative;
-    transition: transform 0.3s ease;
-    transform: translateY(-40px) scale(1); /* 添加初始缩放值 */
-    margin: 80px auto 60px;
-    will-change: transform; /* 优化动画性能 */
+    z-index: 1; /* 确保在页面层级中可操作 */
+    transition: transform 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: transform;
+    margin: 20px auto; /* 简化外边距 */
+    transform-box: fill-box; /* 确保缩放基准正确 */
+    overflow: visible !important; /* 允许内容溢出 */
 }
 
         .scale-controls {
@@ -492,10 +496,10 @@
         }
 
         #minesweeper-container {
-        transform: none !important; /* 覆盖移动端原有变换 */
+        transform: translateY(0) scale(1) !important;
         margin: 40px auto;
     }
-    }
+    
 
         .scale-controls {
         bottom: 80px;
@@ -508,7 +512,7 @@
         font-size: 20px;
     }
 }
-}
+
     </style>
 </head>
 <body>
@@ -808,31 +812,51 @@
 
 
 <script>
-// 获取游戏容器
-const gameContainer = document.getElementById('minesweeper-container');
-
-let scale = 1;
-const minScale = 0.7;
-const maxScale = 1.3;
-const scaleStep = 0.1;
-
-function updateScale(newScale) {
-    scale = Math.min(Math.max(newScale, minScale), maxScale);
-    gameContainer.style.transform = `scale(${scale})`;
-    gameContainer.style.transformOrigin = 'center top'; // 从顶部中心缩放
-}
-
-// 保持原有事件监听不变
-document.getElementById('zoom-in').addEventListener('click', () => {
-    updateScale(scale + scaleStep);
-});
-
-document.getElementById('zoom-out').addEventListener('click', () => {
-    updateScale(scale - scaleStep);
-});
-
-// 键盘事件处理保持不变...
-</script>
+    // 修改后的缩放脚本
+    const gameContainer = document.getElementById('minesweeper-container');
+    let scale = 1;
+    const minScale = 0.7;
+    const maxScale = 1.3;
+    const scaleStep = 0.1;
+    
+    // 确保容器初始状态可缩放
+    gameContainer.style.transform = 'scale(1)';
+    
+    function updateScale(newScale) {
+        scale = Math.min(Math.max(newScale, minScale), maxScale);
+        gameContainer.style.transform = `scale(${scale})`;
+        gameContainer.style.transformOrigin = 'center top'; // 修正为顶部中心
+        gameContainer.style.margin = '20px auto 80px'; // 保持底部间距
+    }
+    
+    // 修复移动端事件冲突
+    document.getElementById('zoom-in').onclick = (e) => {
+        e.stopPropagation();
+        updateScale(scale + scaleStep);
+    };
+    
+    document.getElementById('zoom-out').onclick = (e) => {
+        e.stopPropagation();
+        updateScale(scale - scaleStep);
+    };
+    
+    // 增强的触摸板支持
+    let lastScale = 1;
+    gameContainer.addEventListener('wheel', (e) => {
+        if (e.ctrlKey) {
+            e.preventDefault();
+            const delta = e.deltaY * -0.01;
+            updateScale(scale + delta);
+        }
+    }, { passive: false });
+    
+    // 添加重置缩放功能
+    window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768) {
+            updateScale(1);
+        }
+    });
+    </script>
     
     <div class="scale-controls">
     <button class="scale-btn" id="zoom-in">+</button>
