@@ -4,14 +4,14 @@
     <title>Royirin Rosmontis Presents</title>
     <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
     <link rel="preload" href="/Kazesawa-Regular.ttf" as="font" type="font/ttf" crossorigin>
-    <style>
+        <style>
 
         @font-face {
             font-family: 'Kazesawa-Regular';
             src: url('/Kazesawa-Regular.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
-            font-display: swap; 
+            font-display: swap; /* 优化字体加载显示 */
         }
         * {
             margin: 0;
@@ -43,16 +43,6 @@
             gap: 20px;
         }
 
-        .brand-text {
-            font-size: 1.8em;
-            color: #2c3e50;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; /* 添加字体声明 */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
 
         .logo-container {
             display: flex;
@@ -170,24 +160,6 @@
             width: 100%;
         }
 
-
-        #line-number {
-            font-size: 2.5em;
-            margin-bottom: 0.5em;
-            color: #2c3e50;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #content-text {
-            font-size: 1.8em;
-            color: #666;
-            min-height: 1.5em;
-            letter-spacing: 1px;
-            opacity: 1;
-        }
-
         .typing-cursor {
             display: inline-block;
             width: 3px;
@@ -211,6 +183,13 @@
             font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; 
         }
 
+        .title-container {
+        margin: 0 auto; 
+        font-weight: bold;
+        font-size: 13px; 
+    }
+
+
         
         @keyframes blink {
             0%, 100% { opacity: 1; }
@@ -225,10 +204,6 @@
             .topbar {
                 height: 60px;
                 padding: 0 20px;
-            }
-            
-            .brand-text {
-                font-size: 1.4em;
             }
 
             .right-logo {
@@ -245,11 +220,7 @@
             }
 
             .dropdown-menu {
-                width: 100%;
-                right: auto;
-                left: 0;
-                border-radius: 0 0 8px 8px;
-                position: fixed;
+                min-width: 160px;
             }
 
             .dropdown-menu a {
@@ -261,6 +232,7 @@
                 padding: 12px 0;
             }
         
+
         .topbar-nav {
             position: absolute;
             top: 100%;
@@ -271,7 +243,6 @@
             padding: 15px 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             display: none;
-            order: 1;
         }
         
         .topbar-nav.active {
@@ -281,6 +252,9 @@
         .nav-item {
             padding: 10px 0;
         }
+        
+        .additional-box {
+            margin-left: auto;
 
        .dropdown-menu {
             width: 100%;
@@ -288,7 +262,18 @@
             left: 0;
             border-radius: 0 0 8px 8px;
         }
-        /*!-- 以上为网页主架构 --*/
+
+        .hamburger {
+        display: block;
+    }
+    
+        .logo-container {
+            margin-left: 0;
+        }
+        
+        .topbar-nav {
+            order: 1;
+        }
 }
     </style>
 </head>
