@@ -289,17 +289,39 @@
     </style>
 </head>
 <body>
-<script>
-    document.querySelectorAll('.toc-list a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+    <script>
+        const logoContainer = document.querySelector('.logo-container');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const contentText = document.getElementById('content-text');
+        const lineNumber = document.getElementById('line-number');
+        const hamburger = document.querySelector('.hamburger');
+        const topbarNav = document.querySelector('.topbar-nav');
+
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            topbarNav.classList.toggle('active');
         });
+
+        document.addEventListener('click', function(e) {
+            topbarNav.classList.remove('active');
+        });
+
+        document.querySelector('.right-logo').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
     });
+
+        document.addEventListener('click', function(e) {
+            if (!logoContainer.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
 </script>
 
 <div class="topbar">
