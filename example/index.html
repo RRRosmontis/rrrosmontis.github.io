@@ -326,16 +326,11 @@
             e.stopPropagation();
         });
 
-        document.querySelector('.right-logo').addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('active');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (!logoContainer.contains(e.target)) {
-                dropdownMenu.classList.remove('active');
+        document.addEventListener('DOMContentLoaded', function() {
+    const contentText = document.getElementById('content-text');
+    const lineNumber = document.getElementById('line-number');
     }
+                                  
 });
 </script>
 
