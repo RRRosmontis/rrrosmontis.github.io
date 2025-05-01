@@ -245,7 +245,11 @@
             }
 
             .dropdown-menu {
-                min-width: 160px;
+                width: 100%;
+                right: auto;
+                left: 0;
+                border-radius: 0 0 8px 8px;
+                position: fixed;
             }
 
             .dropdown-menu a {
@@ -322,6 +326,17 @@
             e.stopPropagation();
         });
 
+        document.querySelector('.right-logo').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!logoContainer.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+    }
+});
 </script>
 
 <div class="topbar">
