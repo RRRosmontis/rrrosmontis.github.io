@@ -604,8 +604,8 @@
     
     <div id="game-controls" style="margin-bottom: 25px;">
         <div style="display: inline-flex; gap: 10px; background: rgba(255,255,255,0.9); padding: 12px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            <input type="number" id="rows" min="5" max="20" placeholder="行数" class="game-input" oninput="clampValue(this)">
-            <input type="number" id="cols" min="5" max="20" placeholder="列数" class="game-input" oninput="clampValue(this)">
+            <input type="number" id="rows" min="1" max="20" placeholder="行数" class="game-input" oninput="clampValue(this)">
+            <input type="number" id="cols" min="1" max="20" placeholder="列数" class="game-input" oninput="clampValue(this)">
             <input type="number" id="mines" min="1" max="99" placeholder="雷数" class="game-input">
             <button onclick="startNewGame()" class="game-button">开始新游戏</button>
         </div>
@@ -622,7 +622,7 @@
     let gameActive = false;
 
     function clampValue(input) {
-    if (input.value < 5) input.value = 5;
+    if (input.value < 1) input.value = 1;
     if (input.value > 20) input.value = 20;
 }
 
@@ -633,8 +633,8 @@ function startNewGame() {
     let mines = parseInt(document.getElementById('mines').value) || 15;
 
     // 强制修正数值范围
-    rows = Math.min(Math.max(rows, 5), 20);
-    cols = Math.min(Math.max(cols, 5), 20);
+    rows = Math.min(Math.max(rows, 1), 20);
+    cols = Math.min(Math.max(cols, 1), 20);
     mines = Math.min(Math.max(mines, 1), rows*cols-1);
 
     // 更新输入框显示
