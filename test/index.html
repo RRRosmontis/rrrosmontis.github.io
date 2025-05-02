@@ -1,1 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Royirin Rosmontis Presents</title>
+    <link rel="icon" type="image/png" href="/favicon.png?ver=1.0" sizes="64x64">
+    <link rel="preload" href="/Kazesawa-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <style>
 
+        @font-face {
+            font-family: 'Kazesawa-Regular';
+            src: url('/Kazesawa-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* 优化字体加载显示 */
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            padding-top: 80px;
+            min-height: 100vh;
+            background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+                        url('/background.jpg') center/cover fixed;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: #ffffff;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 1000;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand-text {
+            font-size: 1.8em;
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; /* 添加字体声明 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-left: auto;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .right-logo {
+            height: 45px;
+            width: auto;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .right-logo:hover {
+            animation: spin 0.5s linear;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 180px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+            animation: menuSlide 0.3s ease;
+        }
+
+        @keyframes menuSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 1em;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(44, 62, 80, 0.05);
+        }
+
+        .hamburger {
+        display: none;
+        cursor: pointer;
+        padding: 10px;
+    }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #2c3e50;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+        
+        .topbar-nav {
+            display: flex;
+            gap: 20px;
+            order: -1;
+            margin-right: 0;
+        }
+        
+        .nav-item {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                        Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: 1.1em;
+            color: #2c3e50;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.2s ease;
+            padding: 5px 0;
+        }
+        
+        .nav-item:hover {
+            color: #3498db;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3498db;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        #dynamic-content {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 200px;
+        }
+
+        .additional-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 0 auto 60px;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-height: 200px;
+        }
+
+        #line-number {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #2c3e50;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #content-text {
+            font-size: 1.8em;
+            color: #666;
+            min-height: 1.5em;
+            letter-spacing: 1px;
+            opacity: 1;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            background: #666;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            border-top: 1px solid #eee;
+            z-index: 999;
+            font-family: 'Kazesawa-Regular', -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+
+        .title-container {
+        margin: 0 auto; 
+        font-weight: bold;
+        font-size: 13px; 
+    }
+
+        .content-info-text {
+          font-size: 14px;
+          color: #cccccc; 
+          text-align: center; 
+          margin: 0 auto; 
+        }
+
+        .custom-hr {
+            border: none;
+            height: 1px;
+            background-color: #ccc;
+            width: 40%;
+            margin: 20px auto; 
+            opacity: 0.6;
+        }
+
+        .toc-container {
+        position: fixed;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(5px);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 998;
+        transition: transform 0.3s ease;
+    }
+
+    .toc-container:hover {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .toc-title {
+        font-size: 1.2em;
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 8px;
+    }
+
+    .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .toc-list li {
+        margin: 8px 0;
+    }
+
+    .toc-list a {
+        color: #666;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        position: relative;
+        padding-left: 12px;
+    }
+
+    .toc-list a::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #2c3e50;
+        transition: transform 0.2s ease;
+    }
+
+    .toc-list a:hover {
+        color: #2c3e50;
+        padding-left: 16px;
+    }
+
+    .toc-list a:hover::before {
+        transform: scale(1.3);
+    }
+
+    #rain-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 99; /* 确保在顶栏(1000)和底栏(999)之下 */
+}
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        html {
+        scroll-behavior: smooth;
+        }    
+
+        @media (max-width: 768px) {
+            .topbar {
+                height: 60px;
+                padding: 0 20px;
+            }
+            
+            .brand-text {
+                font-size: 1.4em;
+            }
+
+            .right-logo {
+                height: 35px;
+            }
+
+            #dynamic-content {
+                margin-top: 80px;
+                padding: 25px;
+            }
+
+            .additional-box {
+                padding: 25px;
+                margin: 0 auto 30px;
+                min-height: 150px;
+            }
+
+            #line-number {
+                font-size: 2em;
+            }
+
+            #content-text {
+                font-size: 1.5em;
+            }
+
+            .dropdown-menu {
+                min-width: 160px;
+            }
+
+            .dropdown-menu a {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            .footer {
+                font-size: 0.8em;
+                padding: 12px 0;
+            }
+            .toc-container {
+            display: block;
+        }
+        
+            .additional-box {
+                margin-left: 200px; 
+            }
+            .custom-hr {
+                border: none;
+                height: 1px;
+                background-color: #ccc;
+                width: 70%; 
+                margin: 20px auto; 
+                opacity: 0.6; 
+            }
+            .toc-container {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 60px; 
+            top: auto; 
+            transform: none; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+            padding: 15px 10px;
+            width: auto;
+            margin: 0 20px;
+        }
+
+        .toc-title {
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .toc-list {
+            display: flex;
+            gap: 15px;
+            padding: 0 10px;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .toc-list li {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .toc-list a {
+            padding: 8px 12px;
+            background: rgba(44, 62, 80, 0.1);
+            border-radius: 20px;
+        }
+
+        .toc-list a:hover {
+            background: rgba(44, 62, 80, 0.2);
+            padding-left: 12px; 
+        }
+
+        .toc-list a::before {
+            display: none;
+        }
+
+        .topbar-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            flex-direction: column;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .topbar-nav.active {
+            display: flex;
+        }
+        
+        .nav-item {
+            padding: 10px 0;
+        }
+        
+        .additional-box {
+            margin-left: auto;
+        }
+       .dropdown-menu {
+            width: 100%;
+            right: auto;
+            left: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .hamburger {
+        display: block;
+    }
+    
+        .logo-container {
+            margin-left: 0;
+        }
+        
+        .topbar-nav {
+            order: 1;
+        }
+}
+    </style>
+</head>
+<body>
+<script>
+    document.querySelectorAll('.toc-list a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    });
+</script>
+
+<div class="topbar">
+    <div class="brand-text">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓶𝓸𝓷𝓽𝓲𝓼</div>
+    
+   <div class="logo-container">
+        <!-- 新增导航容器在logo内部 -->
+        <nav class="topbar-nav">
+            <a href="http://rrrosmontis.icu" class="nav-item">主页</a>
+            <a href="http://rrrosmontis.icu/2048" class="nav-item">2048</a>
+            <a href="http://rrrosmontis.icu/Minesweeper" class="nav-item">扫雷</a>
+            <a href="http://rrrosmontis.icu/YbbLolicon" class="nav-item">YbbLolicon</a>
+        </nav>
+        
+        <a href="http://rrrosmontis.icu">
+            <img src="logo.png" class="right-logo" alt="网站Logo">
+        </a>
+        <div class="dropdown-menu">
+            <!-- 保持原有下拉菜单 -->
+            <a href="https://space.bilibili.com/246771023?spm_id_from=333.1007.0.0" target="_blank">bilibili →</a>
+            <a href="https://x.com/0_rosmontis_0" target="_blank">X →</a>
+        </div>
+    </div>
+
+    <div class="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</div>
+
+    <div class="toc-container">
+        <div class="toc-title">目录</div>
+        <ul class="toc-list">
+            <li><a href="#post1">没用的文字</a></li>
+            <li><a href="#post2">对Lonelydcb的抨击</a></li>
+        </ul>
+    </div>
+
+    
+    <div class="footer">
+        <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
+    </div>
+
+
+    <script>
+        const logoContainer = document.querySelector('.logo-container');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const contentText = document.getElementById('content-text');
+        const lineNumber = document.getElementById('line-number');
+        const hamburger = document.querySelector('.hamburger');
+        const topbarNav = document.querySelector('.topbar-nav');
+
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            topbarNav.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            topbarNav.classList.remove('active');
+        });
+
+        document.querySelector('.right-logo').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+    });
+
+        document.addEventListener('click', function(e) {
+            if (!logoContainer.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const contentText = document.getElementById('content-text');
+    const lineNumber = document.getElementById('line-number');
+
+            
+        let isTyping = false;
+        let lines = [];
+        let lastIndex = -1;
+
+        fetch('/dict.txt')
+            .then(response => response.text())
+            .then(data => {
+                lines = data.split('\n').filter(line => line.trim() !== '');
+                startPresentation();
+            })
+            .catch(error => console.error('文件加载失败:', error));
+
+        function getRandomLine() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * lines.length);
+            } while (newIndex === lastIndex && lines.length > 1);
+            lastIndex = newIndex;
+            return newIndex;
+        }
+
+        function startPresentation() {
+            if (isTyping) return;
+
+            lineNumber.style.opacity = 0;
+            contentText.style.opacity = 0;
+
+            setTimeout(() => {
+                const randomIndex = getRandomLine();
+                const currentLine = lines[randomIndex];
+                
+                lineNumber.textContent = `Line ${randomIndex + 1}`;
+                contentText.innerHTML = '';
+                isTyping = true;
+
+                lineNumber.style.opacity = 1;
+                
+                let charIndex = 0;
+                function typeCharacter() {
+                    if (charIndex < currentLine.length) {
+                        contentText.innerHTML = currentLine.substring(0, charIndex) + 
+                                            `<span class="typing-cursor">|</span>`;
+                        contentText.style.opacity = 1;
+                        charIndex++;
+                        setTimeout(typeCharacter, 50);
+                    } else {
+                        contentText.innerHTML = currentLine;
+                        setTimeout(() => {
+                            lineNumber.style.opacity = 0;
+                            deleteCharacter(currentLine, currentLine.length);
+                        }, 3000);
+                    }
+                }
+                typeCharacter();
+            }, 500);
+        }
+
+        function deleteCharacter(line, remaining) {
+            if (remaining > 0) {
+                const newText = line.substring(0, remaining - 1);
+                contentText.innerHTML = newText + `<span class="typing-cursor">|</span>`;
+                setTimeout(() => deleteCharacter(line, remaining - 1), 20);
+            } else {
+                contentText.innerHTML = '';
+                isTyping = false;
+                startPresentation();
+            }
+        }
+});
+
+// 在最后一个script标签内添加以下代码
+// 修改雨滴特效的JavaScript部分为：
+(function() {
+    const canvas = document.getElementById('rain-canvas');
+    const ctx = canvas.getContext('2d');
+    let drops = [];
+    let splashes = [];
+    let topbarHeight, footerHeight; // 改为变量声明
+
+    class Drop {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = -20;
+            this.speed = 2 + Math.random() * 5;
+            this.length = 10 + Math.random() * 20;
+        }
+
+        update() {
+            this.y += this.speed;
+            if (this.y > canvas.height - footerHeight) {
+                this.createSplash();
+                return false;
+            }
+            return true;
+        }
+
+        createSplash() {
+            for(let i = 0; i < 3; i++) {
+                splashes.push({
+                    x: this.x,
+                    y: canvas.height - footerHeight,
+                    dx: -2 + Math.random() * 4,
+                    dy: -2 - Math.random() * 3,
+                    life: 30
+                });
+            }
+        }
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // 动态获取实际高度
+        topbarHeight = document.querySelector('.topbar').offsetHeight;
+        footerHeight = document.querySelector('.footer').offsetHeight;
+    }
+
+
+    function animate() {
+        ctx.strokeStyle = 'rgba(100, 150, 255, 0.9)'; // 更深的蓝色
+        ctx.fillStyle = 'rgba(100, 150, 255, 0.7)';  // 更明显的溅射
+        
+        // 绘制雨滴
+        ctx.strokeStyle = 'rgba(150, 200, 255, 0.7)';
+        ctx.lineWidth = 2;
+        drops.forEach((drop, index) => {
+            if(!drop.update()) {
+                drops.splice(index, 1);
+                return;
+            }
+            ctx.beginPath();
+            ctx.moveTo(drop.x, drop.y);
+            ctx.lineTo(drop.x, drop.y + drop.length);
+            ctx.stroke();
+        });
+
+        // 绘制溅射效果
+        ctx.fillStyle = 'rgba(150, 200, 255, 0.5)';
+        splashes.forEach((splash, index) => {
+            splash.dy += 0.2;
+            splash.x += splash.dx;
+            splash.y += splash.dy;
+            splash.life--;
+            
+            ctx.beginPath();
+            ctx.arc(splash.x, splash.y, 2 * (splash.life/30), 0, Math.PI*2);
+            ctx.fill();
+            
+            if(splash.life <= 0) splashes.splice(index, 1);
+        });
+
+        // 生成新雨滴
+        if(Math.random() < 0.5) {
+             drops.push(new Drop());
+            }   
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
+})();
+    </script>
+
+
+
+    <!-- 动态内容区域 -->
+    <div id="dynamic-content">
+        <div id="line-number"></div>
+        <div id="content-text"></div>
+    </div>
+    
+    <hr class="custom-hr"><br>
+
+    
+    <div class="additional-box" id="post1">
+        <div class="title-container">
+            <h1>一段没用的文字</h1>
+        </div>
+        <div class="content-info-text">
+            <p>2025-4-5 23:51 IP:Earth</p>
+        </div><br>
+        <p>不会有结果的。再见。为了未来的某天。</p>
+    </div>
+
+    
+            <!-- 空白文本框 -->
+    <div class="additional-box" id="post2">
+        <div class="title-container">
+            <h1>对于 Lonelydcb 的严肃抨击</h1>
+        </div>
+        <div class="content-info-text">
+            <p>2025-3-23 22:34 IP:Earth</p>
+        </div><br>
+        <p>以下是来自kimi.ai的对孤独的赞美词：</p><br>
+        <p>    “孤独”是个坏人，他总是喜欢欺负那些比他弱小的人，仗着自己有点力气或者有点小聪明就四处作威作福，完全不顾及别人的感受。他从来不会去想自己的行为会给别人带来多大的伤害，只是一味地满足自己的私欲，把别人的痛苦当作自己的快乐。他总是嘲笑那些努力奋斗却还没有取得成功的人，说他们没有出息，没有本事，完全不理解别人的努力和付出。他觉得自己的地位比别人高，就随意地对别人指手画脚，好像别人都是他的手下一样。他从不尊重别人的意见和想法，总是把自己的观点强加给别人，完全不顾及别人的感受。
+
+他看到别人遇到困难，不但不会去帮忙，反而还会幸灾乐祸，甚至还会落井下石。他觉得别人的不幸就是他的幸运，别人的痛苦就是他的快乐。他总是喜欢在别人背后说坏话，造谣生事，破坏别人之间的关系。他觉得这样可以让自己的地位更高，让别人更害怕他。他从来不会去关心别人的生活，只关心自己的利益。他觉得只要自己过得好就行，别人过得好不好跟他没关系。他总是喜欢把别人的东西据为己有，完全不顾及别人的感受。他觉得自己的东西就是自己的，别人的也是自己的。
+
+他看到别人有困难，不但不会去帮助，反而还会嘲笑别人。他觉得别人的不幸就是自己的快乐，别人的痛苦就是自己的幸福。他总是喜欢在别人背后说坏话，造谣生事，破坏别人之间的关系。他觉得这样可以让自己的地位更高，让别人更害怕他。他从来不会去关心别人的生活，只关心自己的利益。他觉得只要自己过得好就行，别人过得好不好跟他没关系。他总是喜欢把别人的东西据为己有，完全不顾及别人的感受。他觉得自己的东西就是自己的，别人的也是自己的。
+
+他总是喜欢在别人面前炫耀自己的财富和地位，好像这样就可以证明自己比别人强。他完全不顾及别人的感受，只是一味地满足自己的虚荣心。他觉得自己的地位比别人高，就可以随意地对别人指手画脚，好像别人都是他的手下一样。他从不尊重别人的意见和想法，总是把自己的观点强加给别人，完全不顾及别人的感受。他总是喜欢在别人背后说坏话，造谣生事，破坏别人之间的关系。他觉得这样可以让自己的地位更高，让别人更害怕他。他从来不会去关心别人的生活，只关心自己的利益。他觉得只要自己过得好就行，别人过得好不好跟他没关系。他总是喜欢把别人的东西据为己有，完全不顾及别人的感受。他觉得自己的东西就是自己的，别人的也是自己的。
+
+他总是喜欢在别人面前炫耀自己的财富和地位，好像这样就可以证明自己比别人强。他完全不顾及别人的感受，只是一味地满足自己的虚荣心。他觉得自己的地位比别人高，就可以随意地对别人指手画脚，好像别人都是他的手下一样。他从不尊重别人的意见和想法，总是把自己的观点强加给别人，完全不顾及别人的感受。他总是喜欢在别人背后说坏话，造谣生事，破坏别人之间的关系。他觉得这样可以让自己的地位更高，让别人更害怕他。他从来不会去关心别人的生活，只关心自己的利益。他觉得只要自己过得好就行，别人过得好不好跟他没关系。他总是喜欢把别人的东西据为己有，完全不顾及别人的感受。他觉得自己的东西就是自己的，别人的也是自己的。
+
+他总是喜欢在别人面前炫耀自己的财富和地位，好像这样就可以证明自己比别人强。他完全不顾及别人的感受，只是一味地满足自己的虚荣心。他觉得自己的地位比别人高，就可以随意地对别人指手画脚，好像别人都是他的手下一样。他从不尊重别人的意见和想法，总是把自己的观点强加给别人，完全不顾及别人的感受。他总是喜欢在别人背后说坏话，造谣生事，破坏别人之间的关系。他觉得这样可以让自己的地位更高，让别人更害怕他。他从来不会去关心别人的生活，只关心自己的利益。他觉得只要自己过得好就行，别人过得好不好跟他没关系。他总是喜欢把别人的东西据为己有，完全不顾及别人的感受。他觉得自己的东西就是自己的，别人的也是自己的。
+        </p></div>      
+        
+        <canvas id="rain-canvas"></canvas>
+</body>
+</html>
