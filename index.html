@@ -270,53 +270,75 @@
         transition: transform 0.3s ease;
     }
 
-    .toc-container:hover {
-        transform: translateY(-50%) scale(1.05);
-    }
+        .toc-container:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
 
-    .toc-title {
-        font-size: 1.2em;
-        color: #2c3e50;
-        font-weight: 600;
-        margin-bottom: 12px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 8px;
-    }
+        .toc-title {
+            font-size: 1.2em;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
 
-    .toc-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-    .toc-list li {
-        margin: 8px 0;
-    }
+        .toc-list li {
+            margin: 8px 0;
+        }
 
-    .toc-list a {
-        color: #666;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        position: relative;
-        padding-left: 12px;
-    }
+        .toc-list a {
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            padding-left: 12px;
+        }
 
-    .toc-list a::before {
-        content: "•";
-        position: absolute;
-        left: 0;
-        color: #2c3e50;
-        transition: transform 0.2s ease;
-    }
+        .toc-list a::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #2c3e50;
+            transition: transform 0.2s ease;
+        }
 
-    .toc-list a:hover {
-        color: #2c3e50;
-        padding-left: 16px;
-    }
+        .toc-list a:hover {
+            color: #2c3e50;
+            padding-left: 16px;
+        }
 
-    .toc-list a:hover::before {
-        transform: scale(1.3);
-    }
+        .toc-list a:hover::before {
+            transform: scale(1.3);
+        }
+
+        .raindrop {
+        position: fixed;
+        top: -10px;
+        width: 2px;
+        height: 20px;
+        background-color: #00a2ff;
+        opacity: 0.5;
+        border-radius: 50%;
+        animation: fall 5s linear infinite;
+        }
+
+        @keyframes fall {
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh);
+            opacity: 0;
+        }
+        }
         
         @keyframes blink {
             0%, 100% { opacity: 1; }
@@ -644,6 +666,84 @@
             }
         }
 });
+    </script>
+
+<script>
+    // 使用性能更好的Canvas实现雨滴效果
+    function initRainEffect() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.style.position = 'fixed';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+        canvas.style.pointerEvents = 'none';
+        document.body.appendChild(canvas);
+    
+        // 自动适应窗口尺寸
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+    
+        const raindrops = [];
+        const maxDrops = 100; // 最大同时存在的雨滴数量
+        const spawnRate = 20; // 生成间隔(ms)
+    
+        class Raindrop {
+            constructor() {
+                this.reset();
+            }
+    
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.speed = 5 + Math.random() * 5;
+                this.size = 2 + Math.random() * 2;
+                this.alpha = 0.6;
+            }
+    
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height) this.reset();
+            }
+    
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.size/2, this.y + this.size*2);
+                ctx.strokeStyle = `rgba(0, 162, 255, ${this.alpha})`;
+                ctx.lineWidth = this.size;
+                ctx.stroke();
+            }
+        }
+    
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 控制雨滴数量
+            if(raindrops.length < maxDrops && Math.random() < 0.3) {
+                raindrops.push(new Raindrop());
+            }
+    
+            raindrops.forEach((drop, index) => {
+                drop.update();
+                drop.draw();
+                if (drop.y > canvas.height) {
+                    raindrops.splice(index, 1);
+                }
+            });
+    
+            requestAnimationFrame(animate);
+        }
+    
+        // 启动动画
+        animate();
+    }
+    
+    // 初始化雨滴效果
+    initRainEffect();
     </script>
 
     <!-- 动态内容区域 -->
