@@ -719,8 +719,9 @@
     <div class="toc-container">
         <div class="toc-title">目录</div>
         <ul class="toc-list">
-            <li><a href="#post1">没用的文字</a></li>
-            <li><a href="#post2">对Lonelydcb的抨击</a></li>
+            <li><a href="#post3">功能性更新:AI可用</a></li>
+            <li><a href="#post2">没用的文字</a></li>
+            <li><a href="#post1">对Lonelydcb的抨击</a></li>
         </ul>
     </div>
 
@@ -973,12 +974,15 @@
             };
         
             // 绑定图片点击事件
+            // 绑定图片点击事件
             elements.fixedImage.addEventListener('click', function(e) {
                 e.stopPropagation();
                 elements.dialogBox.classList.toggle('active');
+                // 新增：每次打开时清空输入框
+                elements.dialogInput.value = ''; 
                 updateDialogPositions();
             });
-        
+
             // 阻止对话框自身点击关闭
             elements.dialogBox.addEventListener('click', e => e.stopPropagation());
         
@@ -1050,6 +1054,7 @@
                     elements.loadingDialog.classList.remove('active');
                     elements.resultContent.innerHTML = responseText.replace(/\n/g, '<br>');
                     elements.resultDialog.classList.add('active');
+                    elements.dialogInput.value = ''; 
                 } catch (error) {
                     showError(error.message.includes('\n') ? error.message : `${error.message}\n请稍后重试`);
                 }
@@ -1067,7 +1072,17 @@
         </script>
     
     <!-- 文本区域 -->
-    <div class="additional-box" id="post1">
+    <div class="additional-box" id="post3">
+        <div class="title-container">
+            <h1>AI Chat功能当前可用</h1>
+        </div>
+        <div class="content-info-text">
+            <p>2025-5-10 20:00 IP:Earth</p>
+        </div><br>
+        <p>由deepseek模拟的RRRosmontis已上线。无论使用哪种设备，点击主页右下角的立绘即可体验聊天功能。</p>
+    </div>
+
+    <div class="additional-box" id="post2">
         <div class="title-container">
             <h1>一段没用的文字</h1>
         </div>
@@ -1077,7 +1092,7 @@
         <p>不会有结果的。再见。为了未来的某天。</p>
     </div>
 
-    <div class="additional-box" id="post2">
+    <div class="additional-box" id="post1">
         <div class="title-container">
             <h1>对于 Lonelydcb 的严肃抨击</h1>
         </div>
