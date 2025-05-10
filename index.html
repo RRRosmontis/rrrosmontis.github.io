@@ -948,11 +948,14 @@
         </div>
     </div>
 
-    <script>
-        import { systemContent } from './system-content.js';
+    <script type="module">
+    import { systemContent } from './system-content.js';
     
-        console.log(systemContent);
-        
+    // 现在可以在脚本中使用systemContent变量
+    console.log(systemContent);
+    </script>
+    
+    <script>        
         document.addEventListener('DOMContentLoaded', function() {
             // 新增：对话框位置更新函数
             function updateDialogPositions() {
