@@ -950,10 +950,9 @@
     </div>
 
     <script type="module">
-    import { systemContent } from './system-content.js';
-    
-    // 现在可以在脚本中使用systemContent变量
-    console.log(systemContent);
+        import { systemContent } from './system-content.js';
+        window.systemContent = systemContent; // 新增此句
+        console.log(systemContent);
     </script>
     
     <script>        
@@ -1028,7 +1027,7 @@
                             messages: [
                                 {
                                     role: "system",
-                                    content: systemContent
+                                    content: window.systemContent // 通过window访问全局变量
                                 },
                                 { role: "user", content: inputText }
                             ],
