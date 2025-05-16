@@ -644,18 +644,30 @@
             }
 
             .fixed-image {
-                width: 20%; /* 增大宽度比例 */
-                max-width: 180px; /* 增大最大宽度 */
-                bottom: 70px; /* 提升图片位置避免被底栏遮挡 */
+                width: 20vw !important;  /* 使用视口宽度单位 */
+                max-width: none;         /* 移除最大宽度限制 */
+                min-width: 80px;         /* 设置最小宽度防止过小 */
+                bottom: 80px !important; /* 提升图片位置避免被底栏遮挡 */
+                right: 10px !important;  /* 添加右侧间距 */
+                aspect-ratio: 1/1.5;     /* 保持原有宽高比 */
+                transition: all 0.3s;    /* 添加平滑过渡效果 */
             }
-
 
             .dialog-box {
                 width: 80%;
                 right: calc(12% + 30px); /* 移动端调整 */
                 bottom: 100px;
             }
+
+            
          }
+
+         @media (orientation: landscape) {
+            .fixed-image {
+                width: 15vw !important;
+                bottom: 60px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -725,6 +737,8 @@
     <div class="toc-container">
         <div class="toc-title">目录</div>
         <ul class="toc-list">
+            <li><a href="#post5">高考加油</a></li>
+            <li><a href="#post4">功能性更新:AI更新</a></li>
             <li><a href="#post3">功能性更新:AI可用</a></li>
             <li><a href="#post2">没用的文字</a></li>
             <li><a href="#post1">对Lonelydcb的抨击</a></li>
@@ -1016,42 +1030,110 @@
             }
         
             // API请求处理
-            async function handleAPIRequest(inputText) {
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 10000);
-        
-                    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer sk-d82bbd555ad94986a5470a95b664168e'
-                        },
-                        body: JSON.stringify({
-                            model: "deepseek-chat",
-                            messages: [
-                                {
-                                    role: "system",
-                                    content: window.systemContent // 通过window访问全局变量
-                                },
-                                { role: "user", content: inputText }
-                            ],
-                            temperature: 1.3
-                        }),
-                        signal: controller.signal
-                    });
-        
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                    const data = await response.json();
-                    return data.choices[0].message.content;
-        
-                } catch (error) {
-                    if (error.name === 'AbortError') throw new Error('请求超时\n请检查网络连接');
-                    throw error;
-                }
+            const chatHistory = {
+            // 获取有效缓存（24小时内）
+            getValidHistory() {
+                const history = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+                const now = Date.now();
+                return history.filter(entry => now - entry.timestamp < 86400000); // 24小时
+            },
+
+            // 添加新记录
+            addRecord(userInput, apiResponse) {
+                const history = this.getValidHistory();
+                history.push({
+                    userInput,
+                    apiResponse,
+                    timestamp: Date.now()
+                });
+                localStorage.setItem('chatHistory', JSON.stringify(history));
+            },
+
+            // 生成系统提示
+            generateHistoryContext() {
+                const history = this.getValidHistory();
+                if (history.length === 0) return '';
+                
+                let context = '\n\n这些是你与该用户最近的聊天记录：';
+                history.forEach(entry => {
+                    context += `\n用户：${entry.userInput}`;
+                    context += `\n你：${entry.apiResponse}`;
+                });
+                return context + '\n（以上内容仅作为参考，请专注于当前提问。不要告知用户你留存了最近的聊天记录，就当作是你有短时的记忆。不要输出类似"根据本次对话中你提供的信息"的话。）';
             }
-        
+        };
+
+
+            async function handleAPIRequest(inputText) {
+
+    
+            try {
+                const getLocalTime = () => {
+            const now = new Date();
+            return now.toLocaleString('zh-CN', { 
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false 
+            }) + ` (${now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2]})`;
+        };
+
+                const fullInput = `${inputText}\n[当前用户所在地区时间为 ${getLocalTime()}，非必要无需对时间信息进行特地回复。无需对提供的时间信息做出质疑，它是准确的。]`;
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                // 生成带历史记录的系统消息
+                const systemMessage = window.systemContent + chatHistory.generateHistoryContext();
+
+                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer sk-d82bbd555ad94986a5470a95b664168e'
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            {
+                                role: "system",
+                                content: systemMessage
+                            },
+
+                            { 
+                                role: "user", 
+                                content: fullInput  // 使用包含时间信息的完整输入
+                            }
+                        ],
+                        temperature: 1.3
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                const data = await response.json();
+                const responseText = data.choices[0].message.content;
+
+                // 保存到历史记录
+                chatHistory.addRecord(inputText, responseText);
+                
+                return responseText;
+            } catch (error) {
+                if (error.name === 'AbortError') throw new Error('请求超时\n请检查网络连接');
+                throw error;
+            }
+        }
+
+        // 在页面卸载时清理过期记录（可选）
+        window.addEventListener('beforeunload', () => {
+            const validHistory = chatHistory.getValidHistory();
+            localStorage.setItem('chatHistory', JSON.stringify(validHistory));
+        });
+                
             // 发送按钮事件
             elements.dialogButton.addEventListener('click', async function() {
                 const inputText = elements.dialogInput.value.trim();
@@ -1084,6 +1166,26 @@
         </script>
     
     <!-- 文本区域 -->
+         <div class="additional-box" id="post5">
+        <div class="title-container">
+            <h1>高考加油</h1>
+        </div>
+        <div class="content-info-text">
+            <p>2025-5-16 23:38 IP:Earth</p>
+        </div><br>
+        <p>高考加油</p>
+    </div>
+
+     <div class="additional-box" id="post4">
+        <div class="title-container">
+            <h1>AI Chat功能更新</h1>
+        </div>
+        <div class="content-info-text">
+            <p>2025-5-16 23:31 IP:Earth</p>
+        </div><br>
+            <p>✨<br>亲爱的聪明人类：<br><br>我们给AI记忆偷偷加了点"金鱼脑外挂"🐟💻！现在聊天时，本AI会像捧着咖啡杯一样小心参考**本次对话内**的过往记录（但别担心，每次新对话都会触发金鱼式失忆症~）。<br><br>举个栗子🌰：<br>👉 你告诉我"最爱吃芒果"，我就能在**这次聊天中**乖巧回答："要给你切个芒果吗？"<br>👉 但明天再找我...就会变成："芒果？什么芒果？"（理直气壮.jpg）<br><br>特别说明：<br>⚠️ 不记仇 | 不存档 | 不翻旧账（除非你主动说）<br>⚠️ 安全得像金鱼的7秒记忆<br><br>现在试试对我说："记住我喜欢..."然后突然提问吧～<br>（系统更新完毕，正在后台偷吃小饼干🍪）<br><br>【这些内容都是她自己写的】</nr></p>
+        </div>
+
     <div class="additional-box" id="post3">
         <div class="title-container">
             <h1>AI Chat功能当前可用</h1>
