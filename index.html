@@ -589,11 +589,11 @@
                 opacity: 0.6; 
             }
             .toc-container {
-                width: 80%;
-                margin: 0 20px;
-                position: fixed;
-                left: 20px; /* 修正定位 */
-            }
+                left: 0;
+                width: 90%;
+                margin: 0 5%;
+                        }
+
             .toc-title {
                 margin-bottom: 10px;
                 font-size: 1em;
@@ -644,10 +644,25 @@
             }
 
             .toc-toggle {
-                right: -30px; /* 修改为 */
-                right: -35px; /* 根据新布局调整位置 */
-                top: 20px;    /* 调整垂直位置 */
-                z-index: 999; /* 新增层级 */
+                /* 调整定位参数 */
+                right: -40px;
+                top: 15px;
+                /* 增强可视性 */
+                background: rgba(255,255,255,0.95);
+                box-shadow: 3px 0 6px rgba(0,0,0,0.15);
+                /* 增大箭头尺寸 */
+                width: 35px;
+                height: 35px;
+            }
+
+            .toc-toggle::after {
+                font-size: 18px;
+                /* 添加点击反馈动画 */
+                transition: transform 0.3s, opacity 0.2s;
+            }
+
+            .toc-container.collapsed {
+                transform: translateX(calc(-100% + 40px));
             }
 
             .toc-container.collapsed:hover {
