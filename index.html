@@ -588,11 +588,17 @@
                 margin: 20px auto; 
                 opacity: 0.6; 
             }
+
             .toc-container {
+                /* 重置定位方式 */
                 left: 0;
-                width: 90%;
-                margin: 0 5%;
-                        }
+                right: auto;
+                width: 85%;
+                margin: 0 7.5%;
+                top: auto;
+                bottom: 80px; /* 避免与底部元素重叠 */
+                transform: none !important;
+            }
 
             .toc-title {
                 margin-bottom: 10px;
@@ -644,29 +650,37 @@
             }
 
             .toc-toggle {
-                /* 调整定位参数 */
-                right: -40px;
+                display: flex !important;
+                left: 100%; /* 改为左侧定位 */
+                right: auto;
                 top: 15px;
-                /* 增强可视性 */
-                background: rgba(255,255,255,0.95);
-                box-shadow: 3px 0 6px rgba(0,0,0,0.15);
-                /* 增大箭头尺寸 */
-                width: 35px;
-                height: 35px;
+                margin-left: -1px; /* 微调对齐 */
+                width: 36px;
+                height: 36px;
+                background: #fff;
+                box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+                z-index: 1000; /* 高于其他元素 */
             }
 
             .toc-toggle::after {
-                font-size: 18px;
-                /* 添加点击反馈动画 */
-                transition: transform 0.3s, opacity 0.2s;
+                content: "›"; /* 改用更明显的符号 */
+                font-size: 24px;
+                color: #3498db;
+                font-weight: bold;
             }
 
             .toc-container.collapsed {
-                transform: translateX(calc(-100% + 40px));
+                transform: translateX(-95%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .toc-container.collapsed:hover {
                 transform: translateX(calc(-100% + 35px));
+            }
+
+            .toc-container.collapsed .toc-toggle::after {
+                content: "‹";
+                margin-left: 8px;
             }
             
             .nav-item {
