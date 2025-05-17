@@ -47,15 +47,33 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 70px;
             background: #ffffff;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 5%;
             z-index: 1000;
             gap: 20px;
+            flex-wrap: wrap; /* 允许内容换行 */
+            height: auto; /* 改为自动高度 */
+            min-height: 70px; /* 保持最小高度 */
+            padding: 8px 5% !important; /* 增加垂直间距 */
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .page-subtitle {
+            font-size: 0.5em;  /* 基础字号（约12px） */
+            color: rgba(0, 0, 0, 0.6); /* 半透明灰色 */
+            margin-top: 4px; /* 与主标题的间距 */
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
 
@@ -86,43 +104,6 @@
             transition: 0.4s;
         }
         
-        .topbar-nav {
-            display: flex;
-            gap: 20px;
-            order: -1;
-            margin-right: 0;
-        }
-        
-        .nav-item {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 
-                        Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 1.1em;
-            color: #2c3e50;
-            text-decoration: none;
-            position: relative;
-            transition: color 0.2s ease;
-            padding: 5px 0;
-        }
-        
-        .nav-item:hover {
-            color: #3498db;
-        }
-        
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #3498db;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-item:hover::after {
-            width: 100%;
-        }
-
 
         .additional-box {
             background: rgba(255, 255, 255, 0.85);
@@ -317,10 +298,14 @@
 
         @media (max-width: 768px) {
             .topbar {
-                height: 60px;
-                padding: 0 20px;
+                 min-height: 60px;
+                padding: 6px 20px !important;
             }
 
+            .page-subtitle {
+                font-size: 0.2em; /* 移动端更小字号 */
+                margin-top: 2px;
+            }
 
             .additional-box {
                 padding: 25px;
@@ -359,13 +344,6 @@
                 display: none;
             }
             
-            .topbar-nav.active {
-                display: flex;
-            }
-            
-            .nav-item {
-                padding: 10px 0;
-            }
             
             .additional-box {
                 margin-left: auto;
@@ -407,7 +385,11 @@
 </script>
 
 <div class="topbar">
-    <a href="http://rrrosmontis.icu" class="brand-text">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓶𝓸𝓷𝓽𝓲𝓼</a>
+    <div class="header-title">
+        <a href="http://rrrosmontis.icu">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓶𝓸𝓷𝓽𝓲𝓼</a>
+        <div class="page-subtitle">聊天页面</div>
+    </div>
+</div>
     
     <div class="footer">
         <p>© 2025 Royirin Rosmontis. All rights reserved.</p>
