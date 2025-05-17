@@ -15,6 +15,12 @@
             text-decoration: none;
         }
 
+        html, body {
+            touch-action: none;          /* 禁用所有手势操作 */
+            overscroll-behavior: none;   /* 禁用弹性滚动 */
+            -webkit-user-drag: none;     /* 禁用长按拖动 */
+            }
+
         @font-face {
             font-family: 'Kazesawa-Regular';
             src: url('/Kazesawa-Regular.ttf') format('truetype');
@@ -33,6 +39,7 @@
             min-height: 100vh;
             background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
                         url('/background.jpg') center/cover fixed;
+            touch-action: none;
         }
 
         .topbar {
