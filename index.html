@@ -273,7 +273,7 @@
             padding: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             z-index: 998;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .toc-container:hover {
@@ -322,6 +322,37 @@
 
         .toc-list a:hover::before {
             transform: scale(1.3);
+        }
+
+        .toc-toggle {
+            display: none;
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 0 8px 8px 0;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toc-toggle::after {
+            content: "❯";
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        /* 折叠状态 */
+        .toc-container.collapsed {
+            transform: translateX(calc(-100% + 30px));
+        }
+
+        .toc-container.collapsed .toc-toggle::after {
+            transform: rotate(180deg);
         }
 
         .raindrop {
@@ -540,9 +571,6 @@
                 font-size: 0.8em;
                 padding: 12px 0;
             }
-            .toc-container {
-                display: block;
-            }
         
             .additional-box {
                 margin-left: 200px; 
@@ -561,13 +589,13 @@
                 right: 0;
                 bottom: 60px; 
                 top: auto; 
-                transform: none; 
+                transform: translateX(0);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 border-radius: 12px 12px 0 0;
                 padding: 15px 10px;
-                width: auto;
+                width: 80%;
                 margin: 0 20px;
             }
 
@@ -618,6 +646,14 @@
             
             .topbar-nav.active {
                 display: flex;
+            }
+
+            .toc-toggle {
+                display: flex;
+            }
+
+            .toc-container.collapsed:hover {
+                transform: translateX(calc(-100% + 35px));
             }
             
             .nav-item {
@@ -676,6 +712,17 @@
 <body>
     <script>
             document.addEventListener('DOMContentLoaded', function() {
+
+            // 在DOMContentLoaded事件监听器中添加
+            document.querySelector('.toc-toggle').addEventListener('click', function() {
+                document.querySelector('.toc-container').classList.toggle('collapsed');
+            });
+
+            // 防止点击目录内容时意外收起
+            document.querySelector('.toc-container').addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
         const footer = document.querySelector('.footer');
         const fixedImage = document.querySelector('.fixed-image');
         let resizeTimer;
@@ -738,6 +785,7 @@
     </div>
 
     <div class="toc-container">
+        <div class="toc-toggle"></div>
         <div class="toc-title">目录</div>
         <ul class="toc-list">
             <li><a href="#post5">高考加油</a></li>
