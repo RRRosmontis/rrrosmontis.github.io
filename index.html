@@ -338,6 +338,7 @@
             cursor: pointer;
             justify-content: center;
             align-items: center;
+            z-index: 999; /* 新增层级 */
         }
 
         .toc-toggle::after {
@@ -354,6 +355,10 @@
         .toc-container.collapsed .toc-toggle::after {
             transform: rotate(180deg);
         }
+
+        .toc-toggle::after {
+            color: #2c3e50; /* 新增颜色 */
+            }
 
         .raindrop {
             position: fixed;
@@ -584,21 +589,11 @@
                 opacity: 0.6; 
             }
             .toc-container {
-                position: fixed;
-                left: 0;
-                right: 0;
-                bottom: 60px; 
-                top: auto; 
-                transform: translateX(0);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                border-radius: 12px 12px 0 0;
-                padding: 15px 10px;
                 width: 80%;
                 margin: 0 20px;
+                position: fixed;
+                left: 20px; /* 修正定位 */
             }
-
             .toc-title {
                 margin-bottom: 10px;
                 font-size: 1em;
@@ -649,7 +644,10 @@
             }
 
             .toc-toggle {
-                display: flex;
+                right: -30px; /* 修改为 */
+                right: -35px; /* 根据新布局调整位置 */
+                top: 20px;    /* 调整垂直位置 */
+                z-index: 999; /* 新增层级 */
             }
 
             .toc-container.collapsed:hover {
@@ -715,7 +713,7 @@
 
             // 在DOMContentLoaded事件监听器中添加
             document.querySelector('.toc-toggle').addEventListener('click', function() {
-                document.querySelector('.toc-container').classList.toggle('collapsed');
+            document.querySelector('.toc-container').classList.toggle('collapsed');
             });
 
             // 防止点击目录内容时意外收起
