@@ -185,10 +185,7 @@
             max-width: 800px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
-            min-height: 200px; /* 设置最小高度 */
-            height: 200px; /* 固定高度 */
-            overflow: hidden; /* 隐藏溢出内容 */
-            transition: height 0.3s ease; /* 添加高度过渡效果 */
+            min-height: 200px;
         }
 
         .additional-box {
@@ -218,11 +215,6 @@
             min-height: 1.5em;
             letter-spacing: 1px;
             opacity: 1;
-            min-height: 1.5em;
-            height: auto; /* 自动高度 */
-            max-height: 3em; /* 最大高度限制为两行 */
-            overflow: hidden; /* 隐藏溢出内容 */
-            transition: max-height 0.3s ease; /* 添加过渡效果 */
         }
 
         .typing-cursor {
@@ -556,13 +548,6 @@
             #dynamic-content {
                 margin-top: 80px;
                 padding: 25px;
-                min-height: 150px; /* 移动端最小高度 */
-                height: 150px; /* 移动端固定高度 */
-            }
-
-            #content-text {
-                font-size: 1.5em;
-                max-height: 3em; /* 两行高度 */
             }
 
             .additional-box {
@@ -743,6 +728,7 @@
             
          }
 
+        }
     </style>
 </head>
 <body>
@@ -931,9 +917,6 @@
                 }
                 typeCharacter();
             }, 500);
-
-            // 添加高度重置
-    document.getElementById('content-text').style.maxHeight = '3em';
         }
 
         function deleteCharacter(line, remaining) {
@@ -946,10 +929,6 @@
                 isTyping = false;
                 startPresentation();
             }
-
-            if (remaining === 0) {
-        document.getElementById('content-text').style.maxHeight = '1.5em';
-    }
         }
 });
     </script>
