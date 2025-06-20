@@ -1043,6 +1043,7 @@
 
     <script type="module">
         import { systemContent } from './AIChatMobile/system-content.js';
+        systemContent = window.atob(systemContent);
         window.systemContent = systemContent;
         console.log(systemContent);
     </script>
