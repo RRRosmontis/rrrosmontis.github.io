@@ -419,9 +419,9 @@
     </div>
 
     <script type="module">
-        import { systemContent } from './system-content.js';
-        window.systemContent = systemContent; // 新增此句
-        console.log(systemContent);
+        import { systemContent } from './AIChatMobile/system-content.js';
+        window.systemContent = atob(systemContent);
+        console.log(window.systemContent);
     </script>
     
     <script>        
@@ -449,7 +449,6 @@
                 resultContent: document.querySelector('.result-content')
             };
         
-            // 绑定图片点击事件
             // 绑定图片点击事件
             elements.fixedImage.addEventListener('click', function(e) {
                 e.stopPropagation();
