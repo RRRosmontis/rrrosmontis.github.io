@@ -425,6 +425,36 @@
     </script>
     
     <script>        
+         <img src="rrrosmontis.png" class="fixed-image" alt="Decoration">
+
+    <div class="dialog-box main-dialog">
+        <div class="dialog-content">
+            <div class="dialog-text">有什么想对我说的嘛？</div>
+            <textarea class="dialog-input" rows="3"></textarea>
+            <button class="dialog-button">发送</button>
+        </div>
+    </div>
+
+    <div class="dialog-box loading-dialog">
+        <div class="dialog-content">
+            <div class="dialog-text">容我想想......</div>
+        </div>
+    </div>
+    
+    <div class="dialog-box result-dialog">
+        <div class="dialog-content">
+            <div class="dialog-text result-content"></div>
+            <button class="dialog-button confirm-button">确认</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { systemContent } from './AIChatMobile/system-content.js';
+        window.systemContent = atob(systemContent);
+        console.log(window.systemContent);
+    </script>
+    
+    <script>        
         document.addEventListener('DOMContentLoaded', function() {
             // 新增：对话框位置更新函数
             function updateDialogPositions() {
@@ -449,6 +479,7 @@
                 resultContent: document.querySelector('.result-content')
             };
         
+            // 绑定图片点击事件
             // 绑定图片点击事件
             elements.fixedImage.addEventListener('click', function(e) {
                 e.stopPropagation();
