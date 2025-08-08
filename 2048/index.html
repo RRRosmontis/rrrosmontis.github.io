@@ -36,7 +36,13 @@
             min-height: 100vh;
             background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
                         url('/background.jpg') center/cover fixed;
-            font-family: Arial, sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+                            url('/backgroundmobile.jpg') center/cover fixed;
+            }
         }
 
         .topbar {
