@@ -24,7 +24,8 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+
         body {
             display: flex;
             flex-direction: column;
@@ -34,6 +35,12 @@
                         url('/background.jpg') center/cover fixed;
             overflow-x: hidden;
     }
+                @media (max-width: 768px) {
+            body {
+                background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+                            url('/backgroundmobile.jpg') center/cover fixed;
+            }
+        }
 
         .topbar {
             position: fixed;
