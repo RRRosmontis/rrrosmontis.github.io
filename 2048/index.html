@@ -327,6 +327,33 @@
             gap: 30px;  /* 控制左右箭头间距 */
         }
 
+        /* 撤回按钮样式 */
+        .undo-btn {
+            background: #ff9900;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 15px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .undo-btn:hover {
+            background: #e68a00;
+        }
+
+        .undo-btn:active {
+            transform: scale(0.95);
+        }
+
+        .undo-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
         /* 添加缩放控件样式 */
         .scale-controls {
@@ -412,13 +439,18 @@
                 height: 35px;
                 font-size: 20px;
             }
-
+            
+            .undo-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="topbar">
-    <div class="brand-text">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓶𝓸𝓷𝓽𝓲𝓼</div>
+    <div class="brand-text">𝓡𝓸𝔂𝓲𝓻𝓲𝓷·𝓡𝓸𝓼𝓸𝓷𝓽𝓲𝓼</div>
     
     <div class="logo-container">
         <!-- 导航容器 -->
@@ -499,6 +531,10 @@
         <div id="game-container">
         <p style="color:#666; margin:0 0 10px 0;">使用方向键移动方块</p>
         <div id="game-score">Score: 0</div>
+        
+        <!-- 添加撤回按钮 -->
+        <button id="undo-btn" class="undo-btn" disabled>撤回 (Z)</button>
+        
         <div id="game-board"></div>
         
         <!-- 修改后的虚拟方向键 -->
@@ -513,33 +549,62 @@
     </div>
     
     <script>
-
-         let currentScore = 0;
-    let animationFrameId = null;
-
+        // 新增：游戏状态历史记录
+        let gameHistory = [];
+        const MAX_HISTORY = 20; // 最大历史记录数
+        let currentScore = 0;
+        let animationFrameId = null;
         
-        // 新增导航链接事件处理
-        document.querySelectorAll('.nav-item').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdownMenu.classList.remove('active');
-            });
-        });
-        
-        logoContainer.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!logoContainer.contains(e.target)) {
-                dropdownMenu.classList.remove('active');
+        // 新增：保存游戏状态
+        function saveGameState() {
+            // 深拷贝当前游戏状态
+            const state = {
+                board: JSON.parse(JSON.stringify(board)),
+                score: score
+            };
+            
+            // 保存状态到历史记录
+            gameHistory.push(state);
+            
+            // 限制历史记录数量
+            if (gameHistory.length > MAX_HISTORY) {
+                gameHistory.shift(); // 移除最旧的状态
             }
-        });
-
-        dropdownMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
+            
+            // 启用撤回按钮
+            document.getElementById('undo-btn').disabled = false;
+        }
+        
+        // 新增：撤回操作
+        function undoMove() {
+            if (gameHistory.length === 0) return;
+            
+            // 弹出最近保存的状态
+            const lastState = gameHistory.pop();
+            
+            // 恢复游戏状态
+            board = lastState.board;
+            score = lastState.score;
+            
+            // 更新UI
+            updateBoard();
+            updateScore();
+            
+            // 如果历史记录为空，禁用撤回按钮
+            if (gameHistory.length === 0) {
+                document.getElementById('undo-btn').disabled = true;
+            }
+        }
+        
+        // 新增：绑定撤回按钮事件
+        document.getElementById('undo-btn').addEventListener('click', undoMove);
+        
+        // 新增：添加快捷键支持 (Z)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'z') {
+                e.preventDefault();
+                undoMove();
+            }
         });
 
         let board = [];
@@ -547,16 +612,20 @@
         const boardSize = 4;
 
         function initGame() {
-        board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-        const gameBoard = document.getElementById('game-board');
-        gameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
-        score = 0;
-        currentScore = 0;  // 新增重置
-        updateScore();
-        addNewNumber();
-        addNewNumber();
-        updateBoard();
-    }
+            board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+            score = 0;
+            currentScore = 0;  // 新增重置
+            updateScore();
+            addNewNumber();
+            addNewNumber();
+            updateBoard();
+            
+            // 新增：重置历史记录
+            gameHistory = [];
+            document.getElementById('undo-btn').disabled = true;
+        }
 
         function addNewNumber() {
             const emptyCells = [];
@@ -590,32 +659,35 @@
         }
 
          function updateScore() {
-        const targetScore = score;
-        const startScore = currentScore;
-        const duration = 500;
-        const startTime = Date.now();
+            const targetScore = score;
+            const startScore = currentScore;
+            const duration = 500;
+            const startTime = Date.now();
 
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-        }
-
-        function animate() {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            currentScore = Math.floor(startScore + (targetScore - startScore) * progress);
-            document.getElementById('game-score').textContent = `Score: ${currentScore}`;
-            
-            if (progress < 1) {
-                animationFrameId = requestAnimationFrame(animate);
-            } else {
-                currentScore = targetScore;
-                animationFrameId = null;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
             }
-        }
-        animate();
-    }
 
-       function move(direction) {
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                currentScore = Math.floor(startScore + (targetScore - startScore) * progress);
+                document.getElementById('game-score').textContent = `Score: ${currentScore}`;
+                
+                if (progress < 1) {
+                    animationFrameId = requestAnimationFrame(animate);
+                } else {
+                    currentScore = targetScore;
+                    animationFrameId = null;
+                }
+            }
+            animate();
+        }
+
+        function move(direction) {
+            // 新增：在移动前保存当前状态
+            saveGameState();
+            
             let moved = false;
             const originalBoard = JSON.stringify(board);
 
@@ -631,57 +703,65 @@
                 updateBoard();
                 updateScore();
                 checkGameOver();
+            } else {
+                // 如果没有移动，移除刚才保存的状态
+                gameHistory.pop();
+                
+                // 如果没有历史记录，禁用撤回按钮
+                if (gameHistory.length === 0) {
+                    document.getElementById('undo-btn').disabled = true;
+                }
             }
         }
 
 
         function moveVertical(up) {
-    let moved = false;
-    for (let j = 0; j < boardSize; j++) {
-        let column = [];
-        for (let i = 0; i < boardSize; i++) column.push(board[i][j]);
-        if (!up) column = column.reverse();
-        const newColumn = processLine(column, true);
-        if (!up) newColumn.reverse();
-        for (let i = 0; i < boardSize; i++) {
-            if (board[i][j] !== newColumn[i]) {
-                board[i][j] = newColumn[i];
-                moved = true;
+            let moved = false;
+            for (let j = 0; j < boardSize; j++) {
+                let column = [];
+                for (let i = 0; i < boardSize; i++) column.push(board[i][j]);
+                if (!up) column = column.reverse();
+                const newColumn = processLine(column, true);
+                if (!up) newColumn.reverse();
+                for (let i = 0; i < boardSize; i++) {
+                    if (board[i][j] !== newColumn[i]) {
+                        board[i][j] = newColumn[i];
+                        moved = true;
+                    }
+                }
             }
+            return moved;
         }
-    }
-    return moved;
-}
 
         function moveHorizontal(left) {
-    let moved = false;
-    for (let i = 0; i < boardSize; i++) {
-        const row = left ? board[i] : [...board[i]].reverse();
-        const newRow = processLine(row, true);
-        if (!left) newRow.reverse();
-        if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
-            board[i] = newRow;
-            moved = true;
+            let moved = false;
+            for (let i = 0; i < boardSize; i++) {
+                const row = left ? board[i] : [...board[i]].reverse();
+                const newRow = processLine(row, true);
+                if (!left) newRow.reverse();
+                if (JSON.stringify(board[i]) !== JSON.stringify(newRow)) {
+                    board[i] = newRow;
+                    moved = true;
+                }
+            }
+            return moved;
         }
-    }
-    return moved;
-}
 
         function processLine(line, isForward) {
-    let arr = line.filter(x => x !== 0);
-    for (let i = 0; i < arr.length - 1; i++) {
-        if (arr[i] === arr[i + 1]) {
-            arr[i] *= 2;
-            score += arr[i];
-            arr.splice(i + 1, 1);
-            arr.push(0); // 填充一个0以保持长度
+            let arr = line.filter(x => x !== 0);
+            for (let i = 0; i < arr.length - 1; i++) {
+                if (arr[i] === arr[i + 1]) {
+                    arr[i] *= 2;
+                    score += arr[i];
+                    arr.splice(i + 1, 1);
+                    arr.push(0); // 填充一个0以保持长度
+                }
+            }
+            while (arr.length < boardSize) {
+                arr.push(0);
+            }
+            return arr;
         }
-    }
-    while (arr.length < boardSize) {
-        arr.push(0);
-    }
-    return arr;
-}
 
         function checkGameOver() {
             for (let i = 0; i < boardSize; i++) {
@@ -704,8 +784,8 @@
 
         initGame();
 
-                    // 添加移动端控制
-         document.querySelectorAll('.control-btn').forEach(btn => {
+        // 添加移动端控制
+        document.querySelectorAll('.control-btn').forEach(btn => {
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 move(e.target.dataset.direction);
@@ -754,6 +834,6 @@
                 e.preventDefault();
             }
         });
-        </script>
+    </script>
 </body>
 </html>
