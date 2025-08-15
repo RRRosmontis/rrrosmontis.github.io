@@ -314,46 +314,40 @@
             grid-column: 2;
             grid-row: 3;
         }
-        
-        /* 保持原有按钮样式 */
+
+        /* 撤回按钮样式 */
+        .control-btn.undo {
+            background: #00d5ff;
+            /*width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .control-btn.undo:disabled {
+            background: #cccccc;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .control-btn {
             width: 70px;
             height: 70px;
             /* 其他原有样式保持不变 */
         }
 
+        /*
         .row-center {
             display: flex;
-            gap: 30px;  /* 控制左右箭头间距 */
+            gap: 30px;  
         }
-
-        /* 撤回按钮样式 */
-        .undo-btn {
-            background: #ff9900;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin: 15px 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .undo-btn:hover {
-            background: #e68a00;
-        }
-
-        .undo-btn:active {
-            transform: scale(0.95);
-        }
-
-        .undo-btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        */
+        /* 控制左右箭头间距 */
+        
 
         /* 添加缩放控件样式 */
         .scale-controls {
@@ -440,11 +434,11 @@
                 font-size: 20px;
             }
             
-            .undo-btn {
+           /* .undo-btn {
                 padding: 8px 12px;
                 font-size: 14px;
                 margin: 10px 0;
-            }
+            }*/
         }
     </style>
 </head>
@@ -532,8 +526,8 @@
         <p style="color:#666; margin:0 0 10px 0;">使用方向键移动方块</p>
         <div id="game-score">Score: 0</div>
         
-        <!-- 添加撤回按钮 -->
-        <button id="undo-btn" class="undo-btn" disabled>撤回 (Z)</button>
+        <!-- 撤回按钮 -->
+        <!-- <button id="undo-btn" class="undo-btn" disabled>撤回 (Z)</button> -->
         
         <div id="game-board"></div>
         
@@ -542,8 +536,10 @@
     <div class="control-grid">
         <div class="control-btn up" data-direction="ArrowUp">↑</div>
         <div class="control-btn left" data-direction="ArrowLeft">←</div>
+        <div class="control-btn undo" id="undo-btn" title="撤回 (Z)">↺</div>
         <div class="control-btn right" data-direction="ArrowRight">→</div>
         <div class="control-btn down" data-direction="ArrowDown">↓</div>
+        
     </div>
 </div>
     </div>
@@ -551,7 +547,7 @@
     <script>
         // 新增：游戏状态历史记录
         let gameHistory = [];
-        const MAX_HISTORY = 20; // 最大历史记录数
+        const MAX_HISTORY = 5; // 最大历史记录数
         let currentScore = 0;
         let animationFrameId = null;
         
@@ -572,7 +568,7 @@
             }
             
             // 启用撤回按钮
-            document.getElementById('undo-btn').disabled = false;
+            //document.getElementById('undo-btn').disabled = false;
         }
         
         // 新增：撤回操作
@@ -591,13 +587,14 @@
             updateScore();
             
             // 如果历史记录为空，禁用撤回按钮
-            if (gameHistory.length === 0) {
-                document.getElementById('undo-btn').disabled = true;
-            }
+            //if (gameHistory.length === 0) {
+            //    document.getElementById('undo-btn').disabled = true;
+            //}
         }
         
         // 新增：绑定撤回按钮事件
         document.getElementById('undo-btn').addEventListener('click', undoMove);
+        document.getElementById('undo-btn').addEventListener('touchstart', undoMove);
         
         // 新增：添加快捷键支持 (Z)
         document.addEventListener('keydown', (e) => {
@@ -624,7 +621,7 @@
             
             // 新增：重置历史记录
             gameHistory = [];
-            document.getElementById('undo-btn').disabled = true;
+            //document.getElementById('undo-btn').disabled = true;
         }
 
         function addNewNumber() {
@@ -708,9 +705,9 @@
                 gameHistory.pop();
                 
                 // 如果没有历史记录，禁用撤回按钮
-                if (gameHistory.length === 0) {
-                    document.getElementById('undo-btn').disabled = true;
-                }
+                //if (gameHistory.length === 0) {
+                //    document.getElementById('undo-btn').disabled = true;
+                //}
             }
         }
 
