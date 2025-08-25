@@ -15,139 +15,28 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background: #1a1a1a;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
         }
-        
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .message {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        
-        .error {
-            display: none;
-            color: #ff4757;
-            text-align: center;
-            max-width: 80%;
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ff4757;
-            border-radius: 5px;
-            background: rgba(255, 71, 87, 0.1);
-        }
-        
-        .retry-button {
-            margin-top: 15px;
-            padding: 8px 16px;
-            background: #5352ed;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .retry-button:hover {
-            background: #3742fa;
+
+        iframe {
+            margin: 0 auto;
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
     </style>
 </head>
 <body>
-    <div class="loader"></div>
-    <div class="message">正在连接到文件管理器...</div>
-    <div class="error" id="errorMessage">
-        无法连接到文件管理器服务器。请检查：
-        <ul>
-            <li>FRP服务是否正常运行</li>
-            <li>网络连接是否正常</li>
-        </ul>
-        <button class="retry-button" onclick="window.location.reload()">重试</button>
-    </div>
-
+    <iframe src="https://frp-hip:56624/"></iframe>
     <script>
-        // 目标URL - 请替换为您的实际FRP地址
-        const targetUrl = "https://frp-hip.com:56624/";
-        
-        // 设置超时时间（毫秒）
-        const timeout = 10000;
-        
-        // 创建超时计时器
-        const timeoutTimer = setTimeout(() => {
-            showError("连接超时，请检查FRP服务状态");
-        }, timeout);
-        
-        // 尝试使用多种方法解决跨域问题
-        function tryAlternateMethods() {
-            // 方法1: 使用iframe尝试加载
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = targetUrl;
-            document.body.appendChild(iframe);
-            
-            iframe.onload = function() {
-                clearTimeout(timeoutTimer);
-                window.location.href = targetUrl;
-            };
-            
-            iframe.onerror = function() {
-                // 方法2: 使用image ping检测连通性
-                const img = new Image();
-                img.onload = function() {
-                    clearTimeout(timeoutTimer);
-                    window.location.href = targetUrl;
-                };
-                img.onerror = function() {
-                    // 方法3: 直接尝试重定向
-                    clearTimeout(timeoutTimer);
-                    window.location.href = targetUrl;
-                };
-                img.src = targetUrl + '?ping=' + Date.now();
-            };
-        }
-        
-        // 首先尝试使用fetch API
-        fetch(targetUrl, { 
-            method: 'GET',
-            mode: 'cors', // 尝试使用cors模式
-            credentials: 'omit',
-            cache: 'no-cache'
-        })
-        .then(response => {
-            clearTimeout(timeoutTimer);
-            // 成功连接到服务器
-            window.location.href = targetUrl;
-        })
-        .catch(error => {
-            // 如果CORS失败，尝试其他方法
-            tryAlternateMethods();
-        });
-        
-        function showError(message) {
-            document.querySelector('.loader').style.display = 'none';
-            document.querySelector('.message').style.display = 'none';
-            document.getElementById('errorMessage').style.display = 'block';
-            console.error("转发错误:", message);
-        }
+        document.getElementsByTagName("iframe")[0].onload = function () {
+            try {
+                var iframeTitle = this.contentWindow.document.title;
+                document.title = iframeTitle;
+            } catch (e) {
+                console.error("无法获取iframe中的标题，可能是因为跨域限制。异常信息：", e);
+            }
+        };
     </script>
 </body>
 </html>
