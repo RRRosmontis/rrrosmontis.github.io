@@ -327,7 +327,7 @@
 
     .download-button {
             display: inline-block;
-            background-color: #2196F3;
+            background-color: #ddcccc46; /*#2196F3*/
             color: white !important;
             padding: 12px 30px;
             border-radius: 25px;
@@ -339,11 +339,13 @@
             margin: 15px 0;
         }
 
-        .download-button:hover {
-            background-color: #1976D2;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(25, 118, 210, 0.3);
-        }
+    /*
+    .download-button:hover {
+        background-color: #1976D2;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(25, 118, 210, 0.3);
+    }
+        */
 
             /* 在原有样式添加 */
     .api-links {
@@ -416,16 +418,16 @@
     min-height: 30px; /* 保证最小高度 */
 }
 
-.update-section p::before {
-    content: "•";
-    position: absolute;
-    left: 20px; /* 定位在容器左1/3处 (60px * 1/3 = 20px) */
-    top: 50%;
-    transform: translateY(-50%);
-    color: #2196F3;
-    font-size: 1.8em;
-    line-height: 1;
-}
+    .update-section p::before {
+        content: "•";
+        position: absolute;
+        left: 20px; /* 定位在容器左1/3处 (60px * 1/3 = 20px) */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #2196F3;
+        font-size: 1.8em;
+        line-height: 1;
+    }
 
         @keyframes blink {
             0%, 100% { opacity: 1; }
@@ -742,15 +744,14 @@
     <p>2025.x.xx  前面忘了</p>
 </div>
 
-
-        <a href="https://raw.githubusercontent.com/RRRosmontis/rrrosmontis.github.io/refs/heads/main/YbbLolicon/YbbLolicon!.exe" 
+        <!-- 原url：https://raw.githubusercontent.com/RRRosmontis/rrrosmontis.github.io/refs/heads/main/YbbLolicon/YbbLolicon!.exe -->
+        <a href="http:rrrosmontis.icu/YbbLolicon" 
            target="_blank" 
            class="download-button">
             点此下载软件
         </a><br><br>
 
-
-        <p>提示：因API原因,目前此软件可用性极差.请酌情使用.</p>
+        <p>提示：由于API连通性和软件自身问题，此软件已完全不可用。不开放下载。</p>
     </div>
 
 </body>
