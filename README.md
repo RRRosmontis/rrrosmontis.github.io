@@ -1,1 +1,1 @@
-just website pages~
+301 跳转
